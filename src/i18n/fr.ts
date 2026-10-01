@@ -1,13 +1,9 @@
 export const fr = {
-  meta: {
-    title: "Noauffal — Data Scientist",
-    description:
-      "Data Scientist diplômé d'un Master en Data Science, spécialisé dans la conception de solutions Data et IA générative. Expérience en LLM, systèmes agentiques, automatisation Python, OCR, Data Engineering et industrialisation sur Google Cloud Platform (GCP), du prototypage au déploiement de solutions métiers.",
-  },
   nav: {
     home: "Accueil",
     projects: "Projets",
-    about: "À propos",
+    experience: "Expérience",
+    label: "Navigation principale",
   },
   languageSwitcher: {
     label: "Langue",
@@ -17,22 +13,22 @@ export const fr = {
     },
   },
   home: {
-    role: "Data Scientist",
-    description:
-      "Data Scientist diplômé d'un Master en Data Science, spécialisé dans la conception de solutions Data et IA générative. Expérience en LLM, systèmes agentiques, automatisation Python, OCR, Data Engineering et industrialisation sur Google Cloud Platform (GCP), du prototypage au déploiement de solutions métiers.",
     viewProjects: "Voir les projets",
-    about: "À propos",
+    viewExperience: "Voir l'expérience",
+    recentProjects: "Projets récents",
+    projectsSoon: "Mes projets arrivent bientôt.",
+    projectsSoonCta: "Découvrir mon GitHub",
+    experiencePreview: "Expérience",
+    viewAll: "Tout voir",
+    contactHeading: "Travaillons ensemble",
+    contactText: "Une question ou un projet ? Écrivez-moi.",
+    contactCta: "M'écrire",
   },
   projects: {
     heading: "Projets",
     empty: "Aucun projet publié pour le moment.",
     code: "Code",
     demo: "Démo",
-  },
-  about: {
-    heading: "À propos",
-    description:
-      "Data Scientist diplômé d'un Master en Data Science, spécialisé dans la conception de solutions Data et IA générative. Expérience en LLM, systèmes agentiques, automatisation Python, OCR, Data Engineering et industrialisation sur Google Cloud Platform (GCP), du prototypage au déploiement de solutions métiers.",
   },
   footer: {
     rights: "Tous droits réservés.",

@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import "../globals.css";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { resume } from "@/data/resume";
+import { site } from "@/data/site";
 import {
   getDictionary,
   hasLocale,
@@ -35,11 +37,9 @@ export async function generateMetadata({
     return {};
   }
 
-  const dict = getDictionary(lang);
-
   return {
-    title: dict.meta.title,
-    description: dict.meta.description,
+    title: `${site.name} — ${resume[lang].title}`,
+    description: resume[lang].summary,
   };
 }
 

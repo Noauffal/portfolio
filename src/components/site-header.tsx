@@ -9,11 +9,11 @@ type SiteHeaderProps = {
 };
 
 const linkClass =
-  "text-zinc-600 transition-colors hover:text-foreground dark:text-zinc-400";
+  "text-zinc-600 transition-colors hover:text-accent dark:text-zinc-400";
 
 export function SiteHeader({ locale, dict }: SiteHeaderProps) {
   return (
-    <header className="border-b border-black/[.06] dark:border-white/10">
+    <header className="sticky top-0 z-20 border-b border-black/[.06] bg-background/80 backdrop-blur dark:border-white/10">
       <div className="mx-auto flex w-full max-w-5xl flex-wrap items-center justify-between gap-4 px-6 py-4">
         <Link
           href={`/${locale}`}
@@ -22,7 +22,7 @@ export function SiteHeader({ locale, dict }: SiteHeaderProps) {
           {site.name}
         </Link>
         <nav
-          aria-label={dict.nav.home}
+          aria-label={dict.nav.label}
           className="flex items-center gap-5 text-sm"
         >
           <Link href={`/${locale}`} className={linkClass}>
@@ -31,8 +31,8 @@ export function SiteHeader({ locale, dict }: SiteHeaderProps) {
           <Link href={`/${locale}/projects`} className={linkClass}>
             {dict.nav.projects}
           </Link>
-          <Link href={`/${locale}/about`} className={linkClass}>
-            {dict.nav.about}
+          <Link href={`/${locale}/experience`} className={linkClass}>
+            {dict.nav.experience}
           </Link>
         </nav>
         <LanguageSwitcher

@@ -8,6 +8,11 @@ const nextConfig: NextConfig = {
         destination: "/fr",
         permanent: false,
       },
+      {
+        source: "/:lang/about",
+        destination: "/:lang/experience",
+        permanent: true,
+      },
     ];
   },
 };
