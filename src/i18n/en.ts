@@ -10,13 +10,11 @@ export const en: Dictionary = {
   languageSwitcher: {
     label: "Language",
     options: {
-      fr: "Français",
-      en: "English",
+      fr: "Fr",
+      en: "En",
     },
   },
   home: {
-    viewProjects: "View projects",
-    viewExperience: "View experience",
     recentProjects: "Recent projects",
     projectsSoon: "My projects are coming soon.",
     projectsSoonCta: "Check my GitHub",

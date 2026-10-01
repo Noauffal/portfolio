@@ -8,13 +8,11 @@ export const fr = {
   languageSwitcher: {
     label: "Langue",
     options: {
-      fr: "Français",
-      en: "English",
+      fr: "Fr",
+      en: "En",
     },
   },
   home: {
-    viewProjects: "Voir les projets",
-    viewExperience: "Voir l'expérience",
     recentProjects: "Projets récents",
     projectsSoon: "Mes projets arrivent bientôt.",
     projectsSoonCta: "Découvrir mon GitHub",
