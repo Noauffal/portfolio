@@ -1,1 +1,280 @@
 @import "tailwindcss";
+
+:root {
+  --background: #0b0b0d;
+  --foreground: #ededed;
+  --muted: #8f8f94;
+  --line: rgba(255, 255, 255, 0.1);
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --font-display: var(--font-instrument);
+  --font-mono: var(--font-geist-mono);
+}
+
+html,
+body {
+  background-color: var(--background);
+}
+
+body {
+  color: var(--foreground);
+  font-family: var(--font-instrument), system-ui, sans-serif;
+}
+
+/* Stage 3 — cinematic entrance (progressive enhancement) */
+@keyframes hero-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-mask {
+  from {
+    transform: translateY(140%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-rule {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html.hero-anim [data-anim="rule-top"],
+  html.hero-anim [data-anim="rule-bottom"] {
+    transform: scaleX(0);
+  }
+
+  html.hero-anim [data-anim="index"],
+  html.hero-anim [data-anim="name"],
+  html.hero-anim [data-anim="support"],
+  html.hero-anim [data-anim="foot"],
+  html.hero-anim [data-anim="ruler"] {
+    opacity: 0;
+  }
+
+  html.hero-anim [data-anim="support"] {
+    transform: translateY(12px);
+  }
+
+  html.hero-anim [data-anim^="line"] .hero-line-inner {
+    transform: translateY(140%);
+  }
+
+  html.hero-anim.hero-ready [data-anim="rule-top"] {
+    animation: hero-rule 0.9s var(--ease) 0.15s both;
+  }
+
+  html.hero-anim.hero-ready [data-anim="index"] {
+    animation: hero-fade 0.5s var(--ease) 0.3s both;
+  }
+
+  html.hero-anim.hero-ready [data-anim="name"] {
+    animation: hero-fade 0.5s var(--ease) 0.4s both;
+  }
+
+  html.hero-anim.hero-ready [data-anim="line-1"] .hero-line-inner {
+    animation: hero-mask 0.95s var(--ease) 0.55s both;
+  }
+
+  html.hero-anim.hero-ready [data-anim="line-2"] .hero-line-inner {
+    animation: hero-mask 0.95s var(--ease) 0.8s both;
+  }
+
+  html.hero-anim.hero-ready [data-anim="support"] {
+    animation: hero-rise 0.6s var(--ease) 1.3s both;
+  }
+
+  html.hero-anim.hero-ready [data-anim="rule-bottom"] {
+    animation: hero-rule 0.7s var(--ease) 1.35s both;
+  }
+
+  html.hero-anim.hero-ready [data-anim="foot"] {
+    animation: hero-fade 0.5s var(--ease) 1.5s both;
+  }
+
+  html.hero-anim.hero-ready [data-anim="ruler"] {
+    animation: hero-fade 0.4s var(--ease) 1.7s both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-anim],
+  .hero-line-inner {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* Stage 6 — first-scroll hero exit (scroll-driven, reversible) */
+[data-hero] {
+  --hero-p: 0;
+  --meta-p: clamp(0, calc(var(--hero-p) / 0.55), 1);
+  --disp-p: clamp(0, calc((var(--hero-p) - 0.15) / 0.75), 1);
+  --ruler-p: clamp(0, calc((var(--hero-p) - 0.4) / 0.5), 1);
+  --rule-p: clamp(0, calc((var(--hero-p) - 0.55) / 0.45), 1);
+  --field-p: clamp(0, calc((var(--hero-p) - 0.05) / 0.95), 1);
+}
+
+[data-hero] [data-scroll="meta"] {
+  opacity: calc(1 - var(--meta-p));
+  transform: translateY(calc(var(--meta-p) * -8px));
+}
+
+[data-hero] [data-scroll="display"] {
+  opacity: calc(1 - var(--disp-p));
+  transform: translateY(calc(var(--disp-p) * -30px));
+}
+
+[data-hero] [data-scroll="ruler"] {
+  opacity: calc(1 - var(--ruler-p));
+}
+
+[data-hero] [data-anim="rule-top"],
+[data-hero] [data-anim="rule-bottom"] {
+  opacity: calc(1 - var(--rule-p));
+}
+
+[data-hero] canvas {
+  opacity: calc(1 - var(--field-p) * 0.92);
+  transform: translateY(calc(var(--field-p) * -12px));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-hero] [data-scroll],
+  [data-hero] [data-anim="rule-top"],
+  [data-hero] [data-anim="rule-bottom"],
+  [data-hero] canvas {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Stage 8 — one-shot project reveal (scroll-activated, progressive enhancement) */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal-armed [data-reveal] {
+    opacity: 0;
+    transition-property: opacity, transform;
+    transition-duration: var(--rd, 0.6s);
+    transition-timing-function: var(--ease);
+    transition-delay: var(--rdelay, 0s);
+  }
+
+  .reveal-armed [data-reveal="rule"] {
+    opacity: 1;
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  .reveal-armed [data-reveal="title"] {
+    opacity: 1;
+    transform: translateY(105%);
+  }
+
+  .reveal-armed [data-reveal="register"],
+  .reveal-armed [data-reveal="text"],
+  .reveal-armed [data-reveal="meta"],
+  .reveal-armed [data-reveal="links"],
+  .reveal-armed [data-reveal="caption"] {
+    transform: translateY(8px);
+  }
+
+  .reveal-armed [data-reveal="figure"],
+  .reveal-armed [data-reveal="figure-secondary"] {
+    transform: translateY(16px);
+  }
+
+  .reveal-armed [data-reveal-root].is-revealed [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+
+  [data-reveal="rule"] {
+    --rdelay-base: 0s;
+    --rd: 0.5s;
+  }
+  [data-reveal="register"] {
+    --rdelay-base: 0.05s;
+    --rd: 0.5s;
+  }
+  [data-reveal="title"] {
+    --rdelay-base: 0.12s;
+    --rd: 0.7s;
+  }
+  [data-reveal="text"] {
+    --rdelay-base: 0.24s;
+    --rd: 0.6s;
+  }
+  [data-reveal="meta"] {
+    --rdelay-base: 0.34s;
+    --rd: 0.6s;
+  }
+  [data-reveal="links"] {
+    --rdelay-base: 0.44s;
+    --rd: 0.6s;
+  }
+  [data-reveal="figure"] {
+    --rdelay-base: 0.4s;
+    --rd: 0.7s;
+  }
+  [data-reveal="figure-secondary"] {
+    --rdelay-base: 0.5s;
+    --rd: 0.7s;
+  }
+  [data-reveal="apparatus"] {
+    --rdelay-base: 0.72s;
+    --rd: 0.6s;
+  }
+  [data-reveal="caption"] {
+    --rdelay-base: 0.62s;
+    --rd: 0.6s;
+  }
+
+  .reveal-armed [data-reveal] {
+    --rdelay: var(--rdelay-base, 0s);
+  }
+
+  .reveal-armed [data-reveal-root][data-plate="compact"] [data-reveal] {
+    --rdelay: calc(var(--rdelay-base, 0s) * 0.55);
+  }
+
+  .reveal-armed [data-reveal-root][data-plate="split"] [data-reveal="figure"] {
+    --rdelay: 0.06s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

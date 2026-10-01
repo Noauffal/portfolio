@@ -1,21 +1,29 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist_Mono, Instrument_Sans } from "next/font/google";
 import "./globals.css";
+import { HeroGate } from "@/components/hero-gate";
+import { InlineScript } from "@/components/inline-script";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const instrumentSans = Instrument_Sans({
+  variable: "--font-instrument",
   subsets: ["latin"],
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Portfolio",
-  description: "Portfolio",
+  title: "Noauffal Abdullatief — Data Scientist & AI Engineer",
+  description: "I design intelligent systems from data to production.",
 };
+
+const heroScript = `(function(){try{var r=document.documentElement;if(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches){window.__heroAnim="done";return}r.classList.add("hero-anim");window.__heroAnim="armed";var fired=false;var fire=function(){if(fired)return;fired=true;window.__heroAnim="ready";r.classList.add("hero-ready");window.setTimeout(function(){window.__heroAnim="done";r.classList.remove("hero-anim","hero-ready")},2400)};if(document.fonts&&document.fonts.ready&&document.fonts.ready.then){document.fonts.ready.then(function(){window.requestAnimationFrame(fire)})}window.setTimeout(fire,900)}catch(e){try{window.__heroAnim="done";document.documentElement.classList.remove("hero-anim")}catch(_){}}})()`;
+
+const revealScript = `(function(){try{var r=document.documentElement;if(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;r.classList.add("reveal-armed");window.__revealFallback=window.setTimeout(function(){r.classList.remove("reveal-armed")},5000)}catch(e){try{document.documentElement.classList.remove("reveal-armed")}catch(_){}}})()`;
 
 export default function RootLayout({
   children,
@@ -25,9 +33,15 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${instrumentSans.variable} ${geistMono.variable} antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full">{children}</body>
+      <body>
+        <InlineScript html={heroScript} />
+        <InlineScript html={revealScript} />
+        {children}
+        <HeroGate />
+      </body>
     </html>
   );
 }
