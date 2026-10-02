@@ -1,12 +1,14 @@
 # LATENT PLATE — Portfolio Source of Truth
 
 > Single source of truth for the creative direction and technical implementation of this
-> portfolio. Written to let a future session resume without re-explaining Stages 2–8.
-> The **current implementation in `src/` is authoritative**; the older plan
-> (`.kilo/plans/1790868953656-single-page-portfolio-reset.md`) is historical only.
+> portfolio. The **current implementation in `src/` is authoritative**; this document
+> describes it and is kept in sync with the code. Where this document and the code
+> disagree, **the code wins**.
 >
-> Status: complete and visually approved through **Stage 8**. Projects currently use
-> placeholder content. Nothing is committed beyond the Phase 1 reset commit `21449a4`.
+> Status: Hero (Stages 2–6) is LOCKED and unchanged. Projects are now the approved
+> **Direction 03 / Physical Plates** system. The former BLACK → PAPER / Stage 7–8 paper
+> Projects experience is **superseded and retained for rollback only**. Projects still
+> use placeholder content.
 
 ---
 
@@ -14,14 +16,18 @@
 
 Read this file first, then (in order):
 
-1. `src/app/globals.css` — tokens + all animation/scroll/reveal CSS.
-2. `src/components/hero.tsx` — hero composition.
-3. `src/components/hero-latent-field.tsx` — the Canvas 2D latent field (`FIELD_CONFIG`).
-4. `src/components/hero-scroll.tsx` — Stage 6 scroll progress.
-5. `src/components/projects/*` + `src/data/projects.ts` — the Projects/PLATE SEQUENCE system.
+1. `src/app/page.tsx` — the single route composition.
+2. `src/app/globals.css` — tokens + Hero keyframes/scroll/reveal CSS + plate scopes.
+3. `src/components/hero.tsx` — Hero composition (LOCKED).
+4. `src/components/hero-latent-field.tsx` — Canvas 2D field (`FIELD_CONFIG`).
+5. `src/components/hero-scroll.tsx` — Stage 6 scroll progress.
+6. `src/components/projects/physical-plate.tsx` — the only Three.js engine.
+7. `src/components/projects/physical-projects.tsx` + `plate-01/02/03.tsx` + `plate-parts.tsx`
+   — the Projects compositions.
+8. `src/data/projects.ts` — project content model.
 
-Treat Stages 2–8 as **LOCKED**. Do not redesign a locked stage without an explicit,
-stated reason. Prefer tuning existing parameters (Section 12) over restructuring.
+The Hero (Sections 3) and the Physical Projects system (Section 4) are the production
+architecture. Section 5 marks the superseded legacy system.
 
 ---
 
@@ -30,427 +36,387 @@ stated reason. Prefer tuning existing parameters (Section 12) over restructuring
 ### 1.1 LATENT PLATE philosophy
 The page is **a scientific plate that measures an invisible field**. Large editorial
 typography is the subject; scientific/specimen apparatus (ruler, indices, hairlines,
-mono metadata, figure captions) is the *calibration* around it; a sparse latent field
-is the atmosphere. The AI/data connection is *discovered*, never advertised.
+mono metadata, figure captions) is the *calibration* around it. The AI/data connection is
+*discovered*, never advertised.
 
-Two approved ideas were fused:
-- **Latent Field** (depth/atmosphere from an abstract point field).
-- **Specimen Plate** (editorial/scientific discipline: hairlines, rulers, mono apparatus,
-  figure captions, generous negative space).
+The original fusion of **Latent Field** (depth/atmosphere from an abstract point field)
+and **Specimen Plate** (editorial/scientific discipline) remains the identity. It now
+extends into Projects as **physical specimen objects** encountered in a continuous black
+space (Section 4).
 
 ### 1.2 Intended emotional impression
-Calm, precise, slightly mysterious; “the opening frame of a restrained film” / “the first
-plate of a well-set monograph.” Confidence through omission. The hero must remain the most
-cinematic moment; everything after is secondary and restrained. The visitor should feel
-continuity between the hero and the projects (“the specimen plate quietly dissolves and the
-document continues”), not a sequence of unrelated landing-page sections.
+Calm, precise, slightly mysterious. The Hero is the cinematic opening; the visitor then
+scrolls through a large empty black spatial field in which physical project Plates appear.
+Confidence through omission.
 
-### 1.3 Editorial / scientific specimen language
-- 1px hairlines; tick marks; endpoint ticks; coordinate labels (`0.0`, `1.0`).
-- Plate registers (`Plate 01`), running header (`Projects — Plates 01–03`).
-- Figure captions in mono (`FIG. 01 — SPECIMEN`).
-- Specimen metadata as label/value rows (`Role / Year / Stack`).
-- Type roles: **Instrument Sans** for display/editorial voice; **Geist Mono** for all apparatus.
-
-### 1.4 Hierarchy and negative space
-1. Display typography (hero) / plate titles (projects)
-2. Supporting copy + editorial metadata
-3. Latent field (atmosphere)
-4. Apparatus (hairlines, ruler, ticks)
-Negative space is structural, not leftover. The hero keeps a deliberate central void and a
-clean lower-left type zone; the field is densest upper-right and never crosses the type.
-
-### 1.5 What the design must NOT become
+### 1.3 What the design must NOT become
 Not a generic/SaaS/dev-portfolio site. Specifically **not**: portfolio cards or a 3-column
-grid; Behance-style thumbnails; glassmorphism; neon/glow/blue-purple AI gradients; cyberpunk;
-Matrix effects; AI brains / neural-network illustrations; floating tech logos; excessive
-particles; pill-heavy UI; huge rounded CTAs; a presentation-slide or parallax-demo feel.
+grid; Behance-style thumbnails; glassmorphism; neon/glow/blue-purple AI gradients;
+cyberpunk; Matrix effects; AI brains / neural-network illustrations; floating tech logos;
+excessive particles; pill-heavy UI; huge rounded CTAs; a presentation-slide or
+parallax-demo feel. Projects must not read as "website cards".
 
 ---
 
 ## 2. Locked visual system
 
-### 2.1 Colors (tokens in `globals.css`)
+### 2.1 Colors (tokens in `globals.css:root`)
 | Token | Value | Use |
 |---|---|---|
-| `--background` | `#0b0b0d` | near-black base |
+| `--background` | `#0b0b0d` | near-black base / continuous latent world |
 | `--foreground` | `#ededed` | off-white display/type |
 | `--muted` | `#8f8f94` | mono apparatus |
 | `--line` | `rgba(255,255,255,0.1)` | hairlines / ticks / frames |
-| `--ease` | `cubic-bezier(0.16, 1, 0.3, 1)` | expo-out easing for all motion |
-Field color is `#ededed` (monochrome). No accent color is in use.
+| `--ease` | `cubic-bezier(0.16, 1, 0.3, 1)` | expo-out easing |
+
+Retained but **not rendered by `/`** (legacy BLACK → PAPER): `--paper #e9e6df`,
+`--paper-ink #171513`, `--paper-muted #6b675f`, `--paper-line rgba(23,21,15,0.15)`.
+The Hero latent field color is `#ededed`.
 
 ### 2.2 Fonts
-- Display: **Instrument Sans** via `next/font/google`, exposed as `--font-instrument`, mapped to
-  the Tailwind `font-display` token.
-- Apparatus: **Geist Mono** (`--font-geist-mono`), mapped to `font-mono`.
-- Geist Sans was intentionally removed.
-- `display: "swap"`; the hero entrance waits on `document.fonts.ready` to avoid a swap mid-reveal.
+- Display: **Instrument Sans** (`next/font/google`, `--font-instrument` → `font-display`).
+- Apparatus: **Geist Mono** (`--font-geist-mono` → `font-mono`).
+- Geist Sans was intentionally removed. `display: "swap"`; the Hero entrance waits on
+  `document.fonts.ready`.
 
 ### 2.3 Grid / container geometry
-- Outer: `mx-auto w-full max-w-[1600px]`, `px-6 sm:px-10`, `py-6 sm:py-8`.
-- Desktop apparatus gutter: **`4rem`** (`md:pl-16`); strings/mono live to the right of it.
-- Hero is `min-h-svh` with `grid-rows-[auto_1fr_auto]` (top band / middle / bottom band).
-- Projects plates use `md:grid-cols-[4rem_1fr]` so each plate carries its own gutter ruler.
-- Baseline-honest spacing; plate heights vary by `emphasis`/`variant`.
+- Hero content: `mx-auto w-full max-w-[1600px]`, `px-6 sm:px-10`, `py-6 sm:py-8`.
+- Desktop apparatus gutter: **`4rem`** (`md:pl-16`).
+- Hero: `min-h-svh`, `grid-rows-[auto_1fr_auto]`.
+- Projects runways use the same `max-w-[1600px]` container and a 12-col grid for axis
+  placement (Section 4.6). A dedicated 4rem gutter is used by the Hero and by the legacy
+  paper plates, not by the physical Plates (which are objects, not grid columns).
 
-### 2.4 Ruler / hairline apparatus
-- Vertical hairline at `left-5` inside the 4rem gutter; ticks at `0/25/50/75/100%`;
-  endpoint ticks `w-3`, interior `w-2`; labels `0.0` / `1.0` at `left-9` (Geist Mono 10px,
-  tracking `0.18em`, `text-muted`).
-- Horizontal hairlines are 1px `bg-line`/`border-line`. In animated contexts they are
-  absolutely-positioned overlay spans with `origin-left` so they can draw via `scaleX`.
-- Ruler is hidden below `md`.
+### 2.4 Ruler / hairline apparatus (Hero — LOCKED)
+Vertical hairline at `left-5` inside the `4rem` gutter; ticks at `0/25/50/75/100%`;
+endpoint ticks `w-3`, interior `w-2`; labels `0.0` / `1.0` at `left-9` (Geist Mono 10px,
+tracking `0.18em`, `text-muted`). Hidden below `md`.
 
-### 2.5 Typography hierarchy
-- Hero display: `clamp(1.75rem, 8.8vw, 8.6rem)`, `uppercase`, `leading-[0.88]`,
-  `tracking-[-0.02em]`; line 1 `font-semibold`, line 2 `font-normal` (weight contrast, not color).
-- Hero supporting: `clamp(1.05rem, 1.6vw, 1.4rem)`, `leading-[1.5]`, `max-w-[36ch]`,
+### 2.5 Typography hierarchy (Hero — LOCKED)
+- Display: `clamp(1.75rem, 8.8vw, 8.6rem)`, `uppercase`, `leading-[0.88]`,
+  `tracking-[-0.02em]`; line 1 `font-semibold`, line 2 `font-normal`.
+- Supporting: `clamp(1.05rem, 1.6vw, 1.4rem)`, `leading-[1.5]`, `max-w-[36ch]`,
   `text-foreground/70`.
 - Apparatus/mono: 10–11px, `uppercase`, `tracking-[0.18em]`, `text-muted`.
-- Projects title: `clamp(1.75rem,4.5vw,4.5rem)` (major) / `clamp(1.5rem,3vw,2.75rem)` (minor),
-  `uppercase`, `leading-[0.95]`.
-- Projects description: `clamp(1rem,1.3vw,1.15rem)`, `leading-[1.55]`, `text-foreground/70`.
 
 ### 2.6 Responsive principles
-- Single route `/`; server-rendered composition; `min-h-svh` (not `100vh`) for mobile bars.
-- Below `md` (768px): ruler hidden; hero type full width with controlled breaks; field count
-  reduced; coarse pointers get no parallax; projects become a single-column flow.
-- Canvas count/breakpoint and all clamp scales are the responsive levers.
+Single route `/`; `min-h-svh`. Below `md` (768px): Hero ruler hidden, field count
+reduced, coarse pointers get no parallax; physical Plates remain frontal/static on coarse
+pointers. Canvas count/breakpoint and clamp scales are the responsive levers.
 
 ---
 
-## 3. Stages 2–8 (history, final behavior, locked)
+## 3. HERO — LOCKED (Plate 00)
 
-### Stage 2 — Static hero composition
-- **Objective:** hero layout, typography, grid, ruler, hairlines with zero motion.
-- **Final behavior:** three-band hero (top: name + `01 / 2026`; middle: lower-left display block
-  with left ruler and central void; bottom: `Lyon, France` + `SCROLL`). Display block is
-  vertically centred then nudged up via `pb-[7vh]`. Two display lines use overflow-hidden
-  wrappers with inner spans.
-- **Final tuned values (authoritative):** display `clamp(1.75rem,8.8vw,8.6rem)` / leading `0.88`;
-  supporting `mt-10 max-w-[36ch] clamp(1.05rem,1.6vw,1.4rem) text-foreground/70`; line weights
-  semibold/normal; `md:pl-16` gutter; ruler geometry as §2.4.
-- **LOCKED:** layout, type sizes/weights, gutter, ruler geometry, hairlines, copy.
+The Hero is **approved and was not redesigned during the Physical Projects work**. Do not
+modify composition, entrance, field, scroll exit, ruler, metadata or typography.
 
-### Stage 3 — Cinematic entrance choreography
-- **Objective:** make the approved static composition arrive cinematically.
-- **Final behavior:** pure CSS keyframes gated by classes on `<html>`. No GSAP. One-shot; no loop.
-- **Mechanism:**
-  - Inline pre-paint script (via `InlineScript` in `layout.tsx`) adds `hero-anim` only if JS and
-    not reduced motion.
-  - `hero-ready` is added after `document.fonts.ready` (fallback `900ms`) + one `requestAnimationFrame`.
-  - `HeroGate` re-applies gate classes after React's dev Strict-Mode remount.
-  - Classes are removed ~2400ms after start (clean end state).
-- **Timings:** rule-top `0.9s @0.15s`; index `0.5s @0.30s`; name `0.5s @0.40s`;
-  line 1 mask `0.95s @0.55s`; line 2 mask `0.95s @0.80s`; support rise `0.6s @1.30s`;
-  rule-bottom `0.7s @1.35s`; foot `0.5s @1.50s`; ruler `0.4s @1.70s`.
-  Mask reveal is `translateY(140% → 0)`, line-level only (never letter/word-level).
-- **Locked:** grammar, timings, gate classes, hero-anim keyframes.
+### 3.1 Composition (`src/components/hero.tsx`, server)
+`<section data-hero>` = `relative mx-auto grid min-h-svh w-full max-w-[1600px]
+grid-rows-[auto_1fr_auto] px-6 py-6 sm:px-10 sm:py-8`. Top band: name + `01 / 2026` on a
+hairline (`md:pl-16`). Middle: left ruler (absolute, `hidden md:block`) + display block
+(`w-full pb-[7vh] md:pl-16`). `<h1 data-scroll="display" data-exclude="hero-type">` with
+two masked lines; supporting `<p data-anim="support" data-exclude="hero-type">`. Bottom
+band: `Lyon, France` + `SCROLL` on a hairline. `HeroLatentField` and `HeroScroll` render
+inside. Copy lives in the `HERO` const.
 
-### Stage 4 — Static latent field
-- **Objective:** add the field as subtle atmosphere; validate composition/density/exclusion.
-- **Final behavior:** one Canvas 2D `<canvas>` behind all hero content (`z-0`, `pointer-events-none`,
-  `aria-hidden`). Static render on mount, again after `document.fonts.ready`, and on resize.
-- **LOCKED:** counts, size/opacity/depth mapping, bias, exclusion, color.
+### 3.2 Entrance — Stage 3 (LOCKED)
+Pure CSS keyframes (`hero-fade`, `hero-rise`, `hero-mask`, `hero-rule`) gated by classes
+on `<html>`. One-shot, no loop. Inline pre-paint script adds `hero-anim` only if JS and not
+reduced motion; `hero-ready` after `document.fonts.ready` (900ms fallback) + one rAF;
+`HeroGate` re-applies gates after dev Strict-Mode remount; classes removed ~2400ms after
+start. Timings: rule-top `0.9s @0.15s`; index `0.5s @0.30s`; name `0.5s @0.40s`; line-1
+mask `0.95s @0.55s`; line-2 mask `0.95s @0.80s`; support rise `0.6s @1.30s`; rule-bottom
+`0.7s @1.35s`; foot `0.5s @1.50s`; ruler `0.4s @1.70s`. Mask reveal is line-level only.
 
-### Stage 5 — Field motion + pointer depth
-- **Objective:** add near-imperceptible ambient drift and restrained pointer parallax.
-- **Final behavior:** single rAF loop (canvas only). Per-point deterministic sinusoidal drift
-  (amplitude scaled by depth). Pointer parallax on fine pointers only, smoothed with lerp.
-  Loop pauses when `document.hidden` or the canvas is off-screen. No per-frame layout reads.
-- **Locked:** drift, parallax, pause/cleanup behavior, DPR cap.
+### 3.3 Latent field — Stages 4/5 (LOCKED)
+One Canvas 2D `<canvas>` behind Hero content (`z-0`, `pointer-events-none`, `aria-hidden`).
+`FIELD_CONFIG` (authoritative): counts `{desktop:220, mobile:120}`, breakpoint `768`,
+size `0.4–2.1px`, opacity `0.045–0.23`, depth `0.2–1`, bias `{strength:0.65,
+exponent:1.6}` (upper-right), exclusion `{padding:48, feather:120}`, drift `{amplitude
+1–2.5, frequency 0.05–0.1}`, parallax `{max:22, lerp:0.06}`, `maxDpr:2`, color `#ededed`.
+Points are normalized `{x,y,z}` + drift phase/frequency; projection = anchor + drift +
+pointer·parallax·depth. Sinusoidal bounded drift; fine-pointer-only parallax; typography
+exclusion via `[data-exclude="hero-type"]`. Single rAF loop; pauses when hidden/off-screen;
+no per-frame layout reads; full cleanup.
 
-### Stage 6 — First-scroll hero exit
-- **Objective:** reversible, scroll-driven hero dissolution.
-- **Final behavior:** `--hero-p` on `[data-hero]` drives staggered group windows (see §5).
-  Scroll controller `hero-scroll.tsx` (passive listener + rAF throttle). No GSAP, no snapping.
-- **Tuning history kept:** 0.18 → 0.32 → **0.45** × `innerHeight`.
-- **Locked:** scroll range 0.45, progress windows, reversibility, separation from Stage 3.
+### 3.4 First-scroll exit — Stage 6 (LOCKED)
+`hero-scroll.tsx` sets `--hero-p = clamp(scrollY / (0.45 * innerHeight), 0, 1)` on
+`[data-hero]` (passive listener + rAF throttle). Derived windows (globals.css): meta
+`0–0.55`; display `0.15–0.90`; ruler `0.40–0.90`; rule-top/bottom `0.55–1.0`; canvas
+`0.05–1.0` (opacity 1→0, ≤12px up). Reversible pure function of `p`.
 
-### Stage 7 — Static Projects / PLATE SEQUENCE
-- **Objective:** validate projects layout/rhythm/continuity before animation.
-- **Final behavior:** three placeholder plates with intentionally different compositions;
-  running header; per-plate gutter ruler; specimen figure placeholders; constrained data model.
-  The temporary 60vh spacer was removed; the real Projects section replaces it.
-- **Locked:** grid, ruler, hairlines, plate asymmetries, figure dimensions, metadata placement,
-  typography sizes, placeholder content.
-
-### Stage 8 — Project reveal choreography
-- **Objective:** quiet, one-shot assembly of each plate as it enters.
-- **Final behavior:** `IntersectionObserver` (`rootMargin: "0px 0px -12% 0px"`, `threshold: 0`)
-  adds `is-revealed` to `[data-reveal-root]` and unobserves it (one-shot). CSS transitions the
-  `[data-reveal]` descendants with per-type delays (see §7). Gate class `reveal-armed` is added
-  pre-paint with a 5s safety fallback.
-- **Locked:** observer config, timing grammar, one-shot behavior, reduced-motion fallbacks.
+### 3.5 Reduced motion / progressive enhancement
+`prefers-reduced-motion: reduce` ⇒ no entrance (`hero-anim` not added), static field,
+CSS reduce blocks force final states. Content is always visible without JS.
 
 ---
 
-## 4. Hero architecture
+## 4. CURRENT PRODUCTION PROJECTS — PHYSICAL PLATES (Direction 03)
 
-### 4.1 Composition (`src/components/hero.tsx`, server)
-- `<section data-hero>` = `relative mx-auto grid min-h-svh w-full max-w-[1600px] grid-rows-[auto_1fr_auto] px-6 py-6 sm:px-10 sm:py-8`.
-- Top band: `name` left, `01 / 2026` right on a hairline (`md:pl-16`).
-- Middle: `relative z-10 flex items-center`; left ruler (absolute, `hidden md:block`); display
-  block (`w-full pb-[7vh] md:pl-16`).
-- Display `<h1 data-scroll="display" data-exclude="hero-type">`: two masked lines.
-- Supporting `<p data-anim="support" data-exclude="hero-type">`.
-- Bottom band: `Lyon, France` left, `SCROLL` right on a hairline.
-- `HeroLatentField` and `HeroScroll` are rendered inside the section.
+### 4.1 Concept and rules
+Projects are **physical specimen objects**, not page sections or UI cards. They exist in
+one continuous near-black world (`#0b0b0d`) with the Hero, encountered while scrolling.
 
-### 4.2 Entrance
-See Stage 3. Keyframes `hero-fade`, `hero-rise`, `hero-mask`, `hero-rule`; gate on `html.hero-anim` /
-`html.hero-ready`; hidden start states only exist while armed (no-JS shows final state).
+- Natural document scroll only. **No** sticky, pinning, scroll hijacking, GSAP, or
+  scroll-driven rotation.
+- **No** fade/pop/scale reveals. Plates enter from below and leave through the top purely
+  because they exist in normal document flow.
+- Scroll controls vertical **presence/position**; pointer controls **orientation** only.
+- Neutral orientation is frontal (`rotateX = 0`, `rotateY = 0`).
+- Real 3D perspective determines which side walls appear; no fake side-opacity toggles,
+  no permanent all-edge outline.
+- Editorial content is real, selectable DOM (not canvas text); links remain native.
 
-### 4.3 Latent field (`src/components/hero-latent-field.tsx`, client)
-Final `FIELD_CONFIG` (authoritative):
+### 4.2 `/` component tree
 ```
-counts:    { desktop: 220, mobile: 120 }   breakpoint: 768
-size:      { min: 0.4, max: 2.1 }          (px; depth-mapped)
-opacity:   { min: 0.045, max: 0.23 }       (depth-mapped)
-depth:     { min: 0.2, max: 1 }
-bias:      { strength: 0.65, exponent: 1.6 }   (upper-right; mixed with uniform)
-exclusion: { padding: 48, feather: 120 }       (px)
-drift:     { amplitudeMin: 1, amplitudeMax: 2.5, frequencyMin: 0.05, frequencyMax: 0.1 }
-parallax:  { max: 22, lerp: 0.06 }         (px at depth=1)
-maxDpr:    2
-color:     "#ededed"
+<main>
+  <Hero />
+  <PhysicalProjects />
+</main>
 ```
-- Points: normalized `{x,y,z}` + per-point drift phase/frequency. Projection = anchor + drift +
-  `pointer * parallaxMax * depth`. Size and alpha scale with depth (fog). Drawn as sub-pixel
-  `fillRect`, `globalAlpha` per point, `source-over` only.
-- **Ambient drift:** smooth, bounded sinusoids (no wrap/bounce/pulse/spawn). Near points drift
-  slightly more.
-- **Pointer parallax:** fine-pointer only; normalized against the canvas; lerp `0.06`; near points
-  up to `22px`, far/medium much less. Typography never moves. No attraction/proximity/readout.
-- **Typography exclusion:** the type rect is the union of `[data-exclude="hero-type"]` (the `<h1>`
-  and the supporting `<p>`), measured after fonts load and on resize; a 48px hard core is
-  rejected at generation and a 120px `smoothstep` feather fades points near it. The live
-  (drifted + parallaxed) position is masked each frame.
-- **Reduced motion:** `animate = !prefers-reduced-motion && (pointer: fine)`; when false the field
-  renders one static frame. Coarse pointers are also static.
-- **Performance:** DPR ≤ 2; layout measured only on `ResizeObserver`/`fonts.ready`; loop paused
-  when hidden/off-screen; no React state in the loop; full cleanup on unmount.
+`PhysicalProjects` renders the void + three Plate runways in order. The black latent world
+continues through Projects — there is **no paper transition**.
 
-### 4.4 Reduced motion (hero)
-`prefers-reduced-motion: reduce` ⇒ no entrance (`hero-anim` not added) and static field; CSS
-reduce blocks force final states. Content is always visible without JS.
+Sequence: **Hero / Plate 00 → black void → Plate 01 (portrait, right) → black void →
+Plate 02 (taller portrait, left) → black void → Plate 03 (very large 16:10, centered) →
+black void / future continuation**.
 
----
+### 4.3 Architecture / files
+| File | Boundary | Responsibility |
+|---|---|---|
+| `src/components/projects/physical-plate.tsx` | **client** | The only Three.js engine: geometry, materials, lighting, camera, projection, pointer, lifecycle. |
+| `src/components/projects/plate-parts.tsx` | server | Shared editorial pieces (`PlateMeta`, `PlateLinks`, `PlateFigure`). |
+| `src/components/projects/plate-01.tsx` / `plate-02.tsx` / `plate-03.tsx` | server | Per-plate dimensions + editorial composition; pass server children into `PhysicalPlate`. |
+| `src/components/projects/physical-projects.tsx` | server | Void + runways + the three plates. |
+| `src/data/projects.ts` | — | Project content model (unchanged); `projects[0..2]`. |
 
-## 5. Stage 6 — first-scroll hero exit
+Three.js is used directly. **No R3F, no drei, no new dependencies.** Compositions stay
+server components; only `physical-plate.tsx` is a client component.
 
-- **Range:** `p = clamp(scrollY / (0.45 * innerHeight), 0, 1)` (`SCROLL_DISTANCE = 0.45` in
-  `hero-scroll.tsx`). `--hero-p` is set on `[data-hero]`; derived per-group values are computed
-  in CSS.
-- **Group windows (`globals.css`):**
-  | Group | Local progress | Range | Effect |
-  |---|---|---|---|
-  | support + metadata (name, index, location, SCROLL) | `clamp(p/0.55)` | 0.00–0.55 | fade + ≤8px up |
-  | display typography | `clamp((p−0.15)/0.75)` | 0.15–0.90 | fade + ≤30px up |
-  | latent field (canvas element) | `clamp((p−0.05)/0.95)` | 0.05–1.00 | opacity 1→0.08 + ≤12px up |
-  | ruler | `clamp((p−0.40)/0.50)` | 0.40–0.90 | fade only |
-  | hairlines | `clamp((p−0.55)/0.45)` | 0.55–1.00 | fade only |
-- **Reversibility:** every value is a pure function of `p`; scrolling back to `scrollY=0`
-  restores the exact Stage 5 hero (identity transforms, opacity 1). No one-shot animation, no
-  accumulated state.
-- **Relationship with Stage 3:** Stage 3 animates inner `data-anim` elements; Stage 6 animates
-  outer `data-scroll` wrappers and the canvas. Different elements/properties, so they never
-  conflict. Stage 6 does not modify Stage 3.
-- **Reduced motion:** `hero-scroll.tsx` returns early; a CSS reduce block forces no scroll
-  transforms.
+### 4.4 Validated physical model (LOCKED)
+Shared engine constants (`physical-plate.tsx`):
+- `BoxGeometry`, **normalized world width = 1**, shared **`DEPTH = 0.24`**, `FRONT_Z = 0.12`.
+- Opaque solid baseline: **`MeshStandardMaterial`, `FrontSide`** only.
+  - Front/back (BoxGeometry groups `[4]=+z`, `[5]=-z`): `#ededeb`, `roughness 0.85`, `metalness 0`.
+  - Sides (groups `[0]=+x`, `[1]=-x`, `[2]=+y`, `[3]=-y`): `#a8acad`, `roughness 0.8`, `metalness 0`.
+- **No** glass, transmission, attenuation, clearcoat, PMREM/environment, bevel, rounded
+  corners, or transparency. (Material polish deferred; see §8.)
+- Lighting: `HemisphereLight(white, #666666, 0.85)` + key `DirectionalLight(white, 1)` at
+  `(2,3,4)` + weak fill `DirectionalLight(white, 0.4)` at `(-3,-1,2)`.
+- Renderer: `antialias: !coarse`, `alpha: true`, `powerPreference: "high-performance"`,
+  `SRGBColorSpace`; DPR cap `2` (`1.5` coarse). No tone mapping set (default).
 
----
+Pointer (orientation only):
+- Neutral `rotateX = 0`, `rotateY = 0`.
+- Max `rotateY ≈ ±12°`, `rotateX ≈ ±8°`.
+- **Local** normalization relative to each Plate's own screen-space center/dimensions
+  (`rect.width * plateFraction`, `rect.height * plateFraction`), never the viewport.
+- Hor. radius `H_RADIUS 0.65`, vert. radius `V_RADIUS 0.55`, dead zone `0.04`,
+  lerp `0.08`, settle `0.002`. Returns to `0/0` on pointer-leave / window blur.
+- Sign convention: pointer on a side exposes that side's wall.
 
-## 6. Projects — PLATE SEQUENCE
+### 4.5 Camera / projection lessons (important invariants)
+- **World geometry and CSS display size are separate.** `surfaceWidth` is the desired
+  visible front-face width; the world geometry is normalized (`1 × height × 0.24`).
+- Camera framing accounts for side visibility. `computeCamera(width,height)`:
+  - `distanceForHeight = FRONT_Z + height / (2·FILL·tan(fov/2))`
+  - `distanceForWidth  = FRONT_Z + width  / (2·FILL·tan(fov/2)·aspect)`
+  - `fillDistance = max(distanceForHeight, distanceForWidth)`
+  - `sideVisibleDistance = FRONT_Z + width/2 / (sin(12°)·0.9)` — a shared minimum so a
+    wide/flat plate's side walls do not stay back-facing under `THREE.FrontSide` at max Y.
+  - `cameraDistance = max(fillDistance, sideVisibleDistance)`
+  - `plateFraction = FILL · (fillDistance − FRONT_Z) / (cameraDistance − FRONT_Z)` — the
+    fraction of the scene the visible front face occupies. `FILL = 0.88`.
+- DOM content maps to the actual `+Z` front face:
+  `contentFraction = height / (2·tan(fov/2)·cameraDistance)`, overlay
+  `inset = (1 − contentFraction)/2`, `perspective = focalPx = (sceneH/2)/tan(fov/2)`,
+  `translateZ = FRONT_Z·scale`. The placeholder uses `surfaceInset = (1 − plateFraction)/2`.
+- **Projection variables are deterministic at SSR.** All `--plate-*` values are computed in
+  the component body (independent of measured size) and rendered inline, so SSR and the
+  hydrated client are identical — no post-hydration size jump. `resize()` is WebGL-only
+  (camera aspect + renderer size); it never mutates layout/projection CSS.
+- **`shrink-0` is REQUIRED on the scene root.** The transparent projection scene is
+  intentionally wider than its flex parent (`scene = surfaceWidth / plateFraction`). If the
+  scene root is allowed to `flex-shrink`, a large landscape plate's scene is clamped by the
+  parent and the visible physical front face becomes far smaller than `surfaceWidth`. This
+  was the P03 sizing bug; the scene root must not shrink. The Projects section uses
+  `overflow-x-clip` to contain the extra transparent room.
 
-### 6.1 Concept
-The hero is conceptually **Plate 00** (a conceptual register only — never added to the hero).
-Projects continue as **Plates 01–0n** in one continuous specimen document. Plate identity comes
-from the shared system; composition varies per project.
-
-### 6.2 Why layouts intentionally vary
-Variable height, asymmetry, and media proportion prevent a slideshow/template feel while the
-system (numbering, grid, ruler, hairlines, fonts, captions, metadata) keeps it coherent. Some
-plates are text/technical-dominant, others figure-dominant.
-
-### 6.3 Global grid / system
-- Same container and `4rem` gutter as the hero; per-plate `md:grid-cols-[4rem_1fr]` with a
-  continuous vertical ruler in the gutter (line at `left-5`, top tick `w-3`).
-- Running header (`Projects — Plates 01–03` + `03 Plates`) on a hairline; not sticky/reactive.
-- Full-width separator hairline above plates 02..0n.
-
-### 6.4 Content model (`src/data/projects.ts`)
-Intentional and minimal; presentation is separate from content.
-```
-Project {
-  slug, index, title, description, role, year, stack: string[],
-  context?, highlight?,
-  links: { label, href, kind: "case"|"code"|"paper"|"demo" }[],
-  variant: "figure-dominant"|"text-dominant"|"split",
-  mediaSide?: "left"|"right",
-  emphasis: "major"|"minor",
-  figures: { id, caption, kind: "screenshot"|"diagram"|"plot"|"code"|"artifact",
-             span: "full"|"half"|"margin"|"banner" }[]
-}
-```
-`plateKind` maps to a reveal variant: `split` → `"split"`, `minor` → `"compact"`, else `"default"`.
-
-### 6.5 Figure / media philosophy
-Every visual is a **specimen figure**, not a card/mockup: hairline frame, registration corner
-marks, optional internal apparatus, and a mono `FIG. 0n — …` caption. Aspect by span:
-`banner 21/9`, `full 16/9`, `half 4/3`, `margin 4/3`. No gradients/glow/imagery. Projects without
-media get a neutral placeholding apparatus so the plate is never empty.
-
-### 6.6 Metadata conventions
-`Meta` renders a label/value grid (`Role`, `Year`, `Stack`, optional `Context`); stack is a
-`·`-separated mono list (no pills). Links are mono uppercase text links (`Case ↗`, `Code ↗`,
-`Paper ↗`) — currently `href: "#"` placeholders.
-
-### 6.7 Current Plate 01 / 02 / 03 placeholder compositions
-| Plate | Variant | Emphasis | Media | Composition |
+### 4.6 Current plates
+| Plate | Data | Format | Axis | Notes |
 |---|---|---|---|---|
-| 01 | `figure-dominant` | major | right | 7/5 text/meta split, then a full-width wide banner figure (`FIG. 01 — SPECIMEN`, `diagram`) |
-| 02 | `text-dominant` | minor | — | 7-col text with stacked metadata + 4-col margin `plot` at col 9 (`FIG. 02 — PLOT`); compact |
-| 03 | `split` | major | left | 6-col figure stack left (`artifact` + smaller `diagram` detail), 6-col text right with a highlight line |
+| **01** | `projects[0]` | portrait `1 × 1.4` (≈5:7) | **right** | Reference physical object. `surfaceWidth: min(clamp(264px, 42.7svh, 604px), 77vw)`. |
+| **02** | `projects[1]` | portrait `1 × 1.5` (≈2:3) | **left** | Narrower/taller; compact composition. `surfaceWidth: min(clamp(255px, 41.1svh, 616px), 77vw)`. |
+| **03** | `projects[2]` | landscape `1 × 0.625` (**exactly 16:10**) | **center** | Monumental scale/rhythm change. `surfaceWidth: clamp(800px, 84vw, 1350px)`. Derived scene ≈ `× 2.29114`. At 1440px viewport the visible front face ≈ **1210 × 756px**. |
+
+P01/P02 surfaceWidth values are `0.88 ×` their original container width (because the scene
+width = `surfaceWidth / plateFraction`, and `plateFraction = 0.88` for them), preserving
+their previously approved on-screen face sizes. P03 must read as a monumental landscape
+slab, not a third card.
+
+### 4.7 Current scroll rhythm (`physical-projects.tsx`)
+These are **current starting values, not permanently locked**. Scroll rhythm is the next
+likely visual calibration area.
+
+| Segment | Value |
+|---|---|
+| initial void (Hero → P01) | `min-h-[45svh] sm:min-h-[60svh]` |
+| P01 runway | `min-h-[150svh]`, right axis |
+| gap | `min-h-[28svh]` |
+| P02 runway | `min-h-[150svh]`, left axis |
+| gap | `min-h-[28svh]` |
+| P03 runway | `min-h-[140svh]`, centered, `overflow-x-clip` |
+
+### 4.8 Performance / lifecycle
+- **One WebGL renderer/context per Plate — three contexts currently.** A future single
+  shared renderer is a possible optimization, **not a current requirement**.
+- Each Plate: `ResizeObserver` (sizing), `IntersectionObserver` (threshold 0) pauses
+  rendering off-screen, `visibilitychange` pauses when hidden, demand rendering (the rAF
+  loop runs only while the pointer lerp is active, then stops), DPR cap, and full disposal
+  of geometry/materials/renderer on unmount.
+- Coarse pointer / mobile: no pointer tilt (static frontal). Reduced motion: static;
+  `[data-plate-content]` transform forced to `none`. No gyroscope.
+- Progressive enhancement: before WebGL is ready (or if WebGL fails) a CSS `::before` paper
+  placeholder at the front-face inset keeps content readable; `data-webgl-ready` hides it.
+
+### 4.9 Mobile caveat (OPEN FOLLOW-UP)
+P03's `surfaceWidth` floor (`clamp(800px, 84vw, 1350px)`) means below ≈952px viewport width
+the 800px floor can exceed the viewport; the section's `overflow-x-clip` contains the
+overflow but the face may be wider than the screen. Mobile P03 sizing/layout is an **open
+follow-up** — desktop integration was the priority and mobile was not redesigned.
 
 ---
 
-## 7. Stage 8 — project reveal behavior
+## 5. SUPERSEDED / RETAINED LEGACY PROJECTS (Stage 7/8 + BLACK → PAPER)
 
-- **Philosophy:** one-shot assembly as a plate enters — “the document registering as you read.”
-  Never tied continuously to scroll; never replays when scrolling back up.
-- **Activation:** `IntersectionObserver` with `rootMargin: "0px 0px -12% 0px"`, `threshold: 0`;
-  `[data-reveal-root]` targets (running header + each plate) get `is-revealed`, then `unobserve`.
-- **Grammar:** rules draw `scaleX(0→1)`; register/meta/links/caption fade + 8px rise; titles mask
-  `translateY(105%→0)` (line-level only, no scale); figures fade + 16px rise; internal apparatus
-  and the `PLACEHOLDER` label fade in after the frame.
-- **Timing (base delays / durations):** rule `0/.5`; register `.05/.5`; title `.12/.7`;
-  text `.24/.6`; meta `.34/.6`; links `.44/.6`; figure `.4/.7`; figure-secondary `.5/.7`;
-  caption `.62/.6`; apparatus `.72/.6` — ranges overlap, not sequential.
-- **Plate variation:** `data-plate="compact"` multiplies all delays by `0.55` (Plate 02);
-  `data-plate="split"` moves the primary figure to `.06s` so it precedes the title (Plate 03).
-- **Why no replay:** `is-revealed` persists and targets are unobserved — a deliberate calm,
-  non-distracting read.
-- **Progressive enhancement / reduced motion:** the pre-paint gate adds `reveal-armed` only with
-  JS and no reduced motion, with a **5s fallback**; `IntersectionObserver` missing ⇒ reveal all
-  immediately; no-JS and reduce ⇒ final visible state (CSS reduce block forces opacity/transform).
-  Content can never be left permanently hidden.
+The former paper-based Projects experience and Stage 8 reveal choreography are **no longer
+the production Projects experience**. They are superseded by the Physical Plates (§4) and
+retained only for rollback.
+
+Superseded files (not imported by `/`):
+- `src/components/projects/projects-section.tsx`
+- `src/components/projects/project-plate.tsx`
+- `src/components/projects/specimen-figure.tsx`
+- `src/components/projects/projects-reveal.tsx`
+
+Superseded CSS still present but not rendered by `/`:
+- `[data-paper]` scope and `--paper*` tokens (`globals.css`).
+- Stage 8 `.reveal-armed [data-reveal]` rules and the reduced-motion reveal block.
+- The `[data-paper]` datum `border-top`.
+
+**BLACK → PAPER is NOT the current production direction.** These items remain for easy
+rollback and are candidates for a separate cleanup pass (see §8).
 
 ---
 
-## 8. Architecture map
+## 6. Architecture map
 
-Server-first App Router. Animation is CSS-driven; client boundaries are tiny controllers.
+Server-first App Router. Animation is CSS-driven for the Hero; Projects use one small
+Three.js client component per Plate.
 
 | File | Boundary | Responsibility |
 |---|---|---|
-| `src/app/layout.tsx` | server | Fonts (Instrument Sans + Geist Mono), metadata, `suppressHydrationWarning`, two pre-paint inline gate scripts, `HeroGate` |
-| `src/app/page.tsx` | server | `<Hero/>` + `<ProjectsSection/>` |
-| `src/app/globals.css` | — | Tokens; Stage 3 keyframes/gates; Stage 6 scroll mapping; Stage 8 reveal rules |
-| `src/components/hero.tsx` | server | Hero composition; `data-hero`/`data-scroll`/`data-anim`/`data-exclude` hooks; `HERO` const |
-| `src/components/hero-latent-field.tsx` | **client** | Canvas 2D field: generation, drift, pointer parallax, exclusion, rAF lifecycle (`FIELD_CONFIG`) |
-| `src/components/hero-scroll.tsx` | **client** | Stage 6 `--hero-p` scroll progress (0.45·innerHeight) |
-| `src/components/hero-gate.tsx` | **client** | Re-applies `hero-anim`/`hero-ready` after dev Strict-Mode remount |
-| `src/components/inline-script.tsx` | **client** | Safe inline `<script>` helper (server `text/javascript`, client `text/plain`) |
-| `src/components/projects/projects-section.tsx` | server | Running header, per-plate mapping, mounts `ProjectsReveal` |
-| `src/components/projects/project-plate.tsx` | server | Three plate layouts; reveal hooks; `data-plate` kind |
-| `src/components/projects/specimen-figure.tsx` | server | Placeholder figures (frame, marks, apparatus, caption) |
-| `src/components/projects/projects-reveal.tsx` | **client** | One-shot `IntersectionObserver` reveal controller |
-| `src/data/projects.ts` | — | Project content model + three placeholder records |
+| `src/app/layout.tsx` | server | Fonts, metadata, pre-paint gate scripts, `HeroGate`. |
+| `src/app/page.tsx` | server | `<main>` → `<Hero/>` + `<PhysicalProjects/>`. |
+| `src/app/globals.css` | — | Tokens; Hero Stage 3/6 CSS; plate scopes; legacy paper/Stage 8 CSS. |
+| `src/components/hero.tsx` | server | Hero composition (LOCKED). |
+| `src/components/hero-latent-field.tsx` | client | Canvas 2D field. |
+| `src/components/hero-scroll.tsx` | client | Stage 6 `--hero-p`. |
+| `src/components/hero-gate.tsx` | client | Re-applies Hero gates after Strict-Mode remount. |
+| `src/components/inline-script.tsx` | client | Safe inline `<script>` helper. |
+| `src/components/projects/physical-plate.tsx` | **client** | Three.js engine (only). |
+| `src/components/projects/physical-projects.tsx` | server | Void + runways + plates. |
+| `src/components/projects/plate-01/02/03.tsx` | server | Plate dimensions + compositions. |
+| `src/components/projects/plate-parts.tsx` | server | Shared editorial pieces. |
+| `src/data/projects.ts` | — | Project content model. |
 
-Dependencies: `next`, `react`, `react-dom` only (plus dev tooling). No animation/UI libraries.
+Dependencies: `next`, `react`, `react-dom`, `three` (plus dev `@types/three`). No animation
+or UI libraries.
 
 ---
 
-## 9. Non-negotiable constraints
+## 7. Non-negotiable constraints
 
 **Aesthetic**
-- No generic portfolio cards, 3-column grids, thumbnails-in-rectangles, or carousels.
-- No SaaS aesthetic; no Behance/thumbnail-grid feel; no presentation-slide feel.
-- No glassmorphism, blur panels, glowing cards, neon/glow, blue/purple AI gradients.
-- No AI-brain / neural-network / node-graph imagery; no floating technology logos.
-- No excessive particles; the latent field must read as measured dust, never a particle effect.
-- No gradients, no stock/fake AI imagery; placeholders stay neutral apparatus.
+- No generic portfolio cards, 3-column grids, thumbnails-in-rectangles, carousels.
+- No SaaS aesthetic; no glassmorphism, blur panels, glowing cards, neon/glow, blue/purple
+  AI gradients, AI-brain/neural imagery, floating tech logos.
+- No excessive particles; the Hero field must read as measured dust, never a particle effect.
+- Physical Plates are opaque solid objects — no glass/transmission/bevel unless deliberately
+  revisited (deferred).
 
 **Motion / interaction**
 - No scroll hijacking, snapping, wheel interception, or artificial inertia.
-- No gratuitous animation; motion must end and become still. The hero stays the strongest moment.
-- No letter-by-letter animation. No hover-gated content. No scale on figures.
-- Project parallax/hover depth is **explicitly deferred** (not implemented).
+- No gratuitous animation; motion ends and becomes still. The Hero stays the strongest moment.
+- No letter-by-letter animation. No hover-gated content. No fade/pop/scale reveals on Plates.
+- Scroll = position; pointer = orientation only.
 
 **Process / architecture**
-- Do not add runtime dependencies (no GSAP, Three.js/WebGL, Lenis, animation/UI libs) without an
-  explicit, justified reason.
-- Do not redesign or re-time a LOCKED stage (Stages 2–8) without an explicit reason.
-- Preserve progressive enhancement: no-JS and reduced-motion must show final, readable content;
-  a failed script must never leave content hidden.
-- Preserve the server/client boundaries; do not convert whole sections to large client components.
-- No new sections, navigation, or placeholder architecture without an explicit request.
+- Do not add runtime dependencies (no GSAP, Three.js wrappers, R3F/drei, Lenis, UI libs)
+  without an explicit, justified reason.
+- Hero (Stages 2–6) is LOCKED; do not redesign without an explicit, stated reason.
+- The physical engine invariants in §4.4–4.5 are LOCKED (geometry, depth, camera,
+  `sideVisibleDistance`, `plateFraction`/`contentFraction`, `shrink-0`, FrontSide).
+- Preserve progressive enhancement: no-JS and reduced-motion must show final, readable
+  content; failed scripts must never leave content hidden.
+- Preserve the server/client boundaries; keep Three.js in the smallest client component.
+- No new sections/navigation/placeholder architecture without an explicit request.
 
 ---
 
-## 10. Current project state
+## 8. Current status / next steps
 
-The visual/interaction system is **complete and approved through Stage 8**: hero (composition,
-entrance, latent field, scroll exit) and Projects/PLATE SEQUENCE (static layout + reveal
-choreography). The **three projects are placeholders** (`PROJECT TITLE`, `ROLE`, `YEAR`,
-`STACK 0n`, `FIG. 0n`, `href: "#"`, neutral specimen frames) because real project content has not
-been created or integrated yet. Nothing beyond the Phase 1 reset commit is committed.
+**LOCKED**
+- Hero (Stages 2–6): composition, typography, ruler, field, entrance, scroll exit.
+- Physical BoxGeometry behavior, shared `DEPTH = 0.24`, `FrontSide` baseline.
+- Pointer orientation behavior (local normalization, ±12°/±8°).
+- P01/P02 formats; P03 16:10 monumental format.
+- Continuous black Projects world; DOM/WebGL front-face alignment; `shrink-0` invariant.
 
----
-
-## 11. Recommended resume point
-
-The next priority is **not** more visual effects. It is:
-1. Integrate the **first real project** into the existing Plate system via `src/data/projects.ts`
-   (title, description, role, year, stack, links, figures).
-2. Adapt the Plate 01 composition to the project's **actual screenshots/diagrams/data/technical
-   artifacts** — replacing the neutral placeholder apparatus with real specimen figures.
-3. Only then consider whether additional plate variants are needed and whether pointer/media
-   depth is worth evaluating.
-Optional non-visual items to consider when convenient: wrap the page content in a `<main>`
-landmark (currently absent), replace placeholder `href="#"` links with real URLs, and add
-`aria-hidden` to the `↗` glyph in links.
+**OPEN / NEXT**
+- Final scroll rhythm calibration (§4.7 values are a starting point).
+- Real project content/assets (replace placeholders in `src/data/projects.ts`).
+- Mobile P03 treatment (the 800px floor caveat, §4.9).
+- Possible material refinement later — **explicitly deferred**; do not reintroduce glass
+  unless deliberately revisited.
+- Possible single-renderer optimization later (not required).
+- Cleanup/removal of superseded Stage 7/8 components + paper CSS after the rollback window.
 
 ---
 
-## 12. Future-session instructions
+## 9. Future-session instructions
 
-- **Read first:** this document, then `src/app/globals.css`, then the hero and projects components
-  listed in Section 8.
-- **Treat as LOCKED:** Stages 2–8 (hero composition, Stage 3 timings, Stage 5 field parameters,
-  Stage 6 range/windows, Stage 7 layouts, Stage 8 reveal grammar). Change them only with an
-  explicit reason and update this document accordingly.
-- **Prefer parameter tuning over restructuring:** `HERO` const (copy) and the field’s
-  `FIELD_CONFIG`; CSS tokens/`--hero-p` mapping/reveal delays; `src/data/projects.ts` content and
-  `variant`/`emphasis`/figure `span`.
-- **Keep it dependency-free, progressive, and performant:** passive listeners, rAF throttling,
-  no per-frame layout reads, DPR ≤ 2, pause off-screen/hidden, tiny client boundaries.
+- **Read first:** this document, then `page.tsx`, `globals.css`, the Hero components, and
+  `src/components/projects/physical-plate.tsx`.
+- **Hero is LOCKED.** Do not modify Stages 2–6.
+- **Physical engine invariants are LOCKED** (§4.4–4.5). Tune parameters (plate formats,
+  `surfaceWidth`, scroll rhythm) rather than restructuring.
+- **Prefer parameter tuning over restructuring:** plate `width`/`height`/`surfaceWidth`,
+  runway heights in `physical-projects.tsx`, and project content in `src/data/projects.ts`.
+- **Keep it dependency-light, progressive, and performant:** passive listeners, rAF
+  throttling, IntersectionObserver offscreen pause, visibility pause, DPR cap, disposal.
 - **Verify before finishing:** `npm run lint`, `npx tsc --noEmit`, `npm run build`.
 
 ---
 
 ## Appendix A — Authoritative parameters (quick reference)
 
-- Scroll exit distance: `0.45 × innerHeight`.
-- Field: 220/120 points, size `0.4–2.1px`, opacity `0.045–0.23`, depth `0.2–1`, bias `0.65/1.6`,
-  exclusion `48/120`, drift `1–2.5px @0.05–0.1`, parallax `22px @ lerp 0.06`, DPR ≤ 2.
-- Entrance: rule `.15s`, index `.30s`, name `.40s`, line-1 `.55s`, line-2 `.80s`, support `1.30s`,
-  rule-bottom `1.35s`, foot `1.50s`, ruler `1.70s` (all expo-out). Ready on `fonts.ready` (900ms fallback).
-- Reveal observer: `rootMargin: "0px 0px -12% 0px"`, `threshold: 0`.
 - Colors: `#0b0b0d` / `#ededed` / `#8f8f94` / `rgba(255,255,255,0.1)`.
+- Hero exit: `--hero-p = clamp(scrollY/(0.45·innerHeight), 0, 1)`.
+- Field: 220/120 pts, size `0.4–2.1px`, opacity `0.045–0.23`, depth `0.2–1`,
+  bias `0.65/1.6`, exclusion `48/120`, drift `1–2.5 @0.05–0.1`, parallax `22 @0.06`, DPR ≤ 2.
+- Physical engine: `DEPTH 0.24`, `FRONT_Z 0.12`, `FILL 0.88`, `FOV 30`,
+  `rotateY ±12°`, `rotateX ±8°`, `H_RADIUS 0.65`, `V_RADIUS 0.55`, dead zone `0.04`,
+  lerp `0.08`. DPR cap `2` / `1.5` coarse.
+- Plates: P01 `1×1.4` right · P02 `1×1.5` left · P03 `1×0.625` (16:10) centered.
+- Scroll rhythm: void `45–60svh`; runways `150/150/140svh`; gaps `28svh` (current).
 
-## Appendix B — Divergences from the original plan (historical only)
+## Appendix B — Historical notes (superseded)
 
-The original plan was written before tuning. Current implementation is authoritative:
-- Display scale/leading: plan `clamp(2.75rem,11vw,9rem)` / `0.92` → now
-  `clamp(1.75rem,8.8vw,8.6rem)` / `0.88`; display block nudged up (`pb-[7vh]`).
-- Supporting copy: plan `mt-6 max-w-[34ch] text-muted` → now `mt-10 max-w-[36ch]
-  clamp(1.05rem,1.6vw,1.4rem) text-foreground/70`.
-- Field: plan ~240 pts, size ≤1.5px, opacity ≤0.10, parallax 12px → now 220/120 pts, size ≤2.1px,
-  opacity 0.045–0.23, parallax 22px (tuned in Stages 4.1, 4.2, 5.1, 5.2, 5.3).
-- Scroll range: plan `0.18×innerHeight` → now `0.45×innerHeight` (Stages 6.1, 6.2).
-- The plan’s coordinate readout / proximity effect was **never built**; the field has no readout.
-- `hero.tsx` remained a **server** component; client behavior lives in sibling client components.
-- A `src/data/projects.ts` content model now exists (the plan assumed no data layer).
+The original plan (`.kilo/plans/…`) and the BLACK → PAPER / Stage 7–8 paper Projects
+experience are historical. The current implementation is authoritative. Earlier decorative
+Hero field tuning (size/opacity/parallax) and the Hero display scale
+(`clamp(1.75rem,8.8vw,8.6rem)`, `leading 0.88`) are as implemented. The prototype route
+`/direction-03` and `src/components/direction-03/` no longer exist — Direction 03 graduated
+into the production Projects architecture under `src/components/projects/`.

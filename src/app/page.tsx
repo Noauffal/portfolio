@@ -1,11 +1,11 @@
 import { Hero } from "@/components/hero";
-import { ProjectsSection } from "@/components/projects/projects-section";
+import { PhysicalProjects } from "@/components/projects/physical-projects";
 
 export default function HomePage() {
   return (
-    <>
+    <main>
       <Hero />
-      <ProjectsSection />
-    </>
+      <PhysicalProjects />
+    </main>
   );
 }

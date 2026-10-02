@@ -6,6 +6,11 @@
   --muted: #8f8f94;
   --line: rgba(255, 255, 255, 0.1);
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  /* BLACK → PAPER — Projects material (reversible experiment). Hero tokens unchanged. */
+  --paper: #e9e6df;
+  --paper-ink: #171513;
+  --paper-muted: #6b675f;
+  --paper-line: rgba(23, 21, 15, 0.15);
 }
 
 @theme inline {
@@ -25,6 +30,75 @@ body {
 body {
   color: var(--foreground);
   font-family: var(--font-instrument), system-ui, sans-serif;
+}
+
+/* BLACK → PAPER — Projects material scope. One full-bleed paper surface with
+   the LATENT PLATE roles inverted, applied by overriding the semantic tokens.
+   The Hero (outside this scope) keeps its dark tokens untouched. */
+[data-paper] {
+  --foreground: var(--paper-ink);
+  --muted: var(--paper-muted);
+  --line: var(--paper-line);
+  background-color: var(--paper);
+  color: var(--foreground);
+  /* The Datum: the paper's real leading edge, static in normal document flow. */
+  border-top: 1px solid var(--paper-line);
+}
+
+/* DIRECTION 03 — floating specimen plate (prototype scope, WebGL V1).
+   WebGL renders the physical slab; the editorial content stays real DOM on a
+   transparent overlay that shares the mesh rotation and camera-matched
+   perspective. Scroll owns position; pointer owns orientation; material is WebGL. */
+[data-plate-scene] {
+  --foreground: var(--paper-ink);
+  --muted: var(--paper-muted);
+  --line: var(--paper-line);
+  --plate-rx: 0deg;
+  --plate-ry: 0deg;
+  --plate-perspective: 1200px;
+  --plate-inset: 6%;
+  position: relative;
+  color: var(--foreground);
+}
+
+/* paper placeholder behind the canvas: keeps content readable before WebGL
+   initialises, and stays in place if WebGL is unavailable */
+[data-plate-scene]::before {
+  content: "";
+  position: absolute;
+  inset: var(--plate-surface-inset, 6%);
+  border-radius: 3px;
+  background: var(--paper);
+}
+
+[data-plate-scene][data-webgl-ready]::before {
+  display: none;
+}
+
+[data-plate-scene] canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* editorial content — real DOM on a transparent overlay, sharing the object's
+   rotation and the camera-matched perspective */
+[data-plate-content] {
+  position: absolute;
+  inset: var(--plate-inset, 6%);
+  transform: perspective(var(--plate-perspective)) rotateX(var(--plate-rx))
+    rotateY(var(--plate-ry)) translateZ(var(--plate-front-z, 0px));
+  transform-origin: center;
+  transform-style: preserve-3d;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-plate-content] {
+    transform: none;
+  }
 }
 
 /* Stage 3 — cinematic entrance (progressive enhancement) */
@@ -164,7 +238,7 @@ body {
 }
 
 [data-hero] canvas {
-  opacity: calc(1 - var(--field-p) * 0.92);
+  opacity: calc(1 - var(--field-p));
   transform: translateY(calc(var(--field-p) * -12px));
 }
 

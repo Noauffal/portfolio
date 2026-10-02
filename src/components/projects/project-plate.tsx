@@ -208,23 +208,29 @@ export function ProjectPlate({
     <article
       data-reveal-root
       data-plate={plateKind(project)}
-      className={`relative grid grid-cols-1 md:grid-cols-[4rem_1fr] ${
-        first ? "" : "border-t border-transparent"
-      }`}
+      className="relative w-full"
     >
-      {first ? null : (
-        <span
-          aria-hidden="true"
-          data-reveal="rule"
-          className="absolute inset-x-0 -top-px h-px origin-left bg-line"
-        />
-      )}
-      <div aria-hidden="true" className="relative hidden md:block">
-        <span className="absolute left-5 top-0 h-full w-px bg-line" />
-        <span className="absolute left-5 top-0 h-px w-3 bg-line" />
-      </div>
-      <div className={`min-w-0 ${spacing}`}>
-        <PlateBody project={project} />
+      <div className="mx-auto w-full max-w-[1600px] px-6 sm:px-10">
+        <div
+          className={`relative grid grid-cols-1 md:grid-cols-[4rem_1fr] ${
+            first ? "" : "border-t border-transparent"
+          }`}
+        >
+          {first ? null : (
+            <span
+              aria-hidden="true"
+              data-reveal="rule"
+              className="absolute inset-x-0 -top-px h-px origin-left bg-line"
+            />
+          )}
+          <div aria-hidden="true" className="relative hidden md:block">
+            <span className="absolute left-5 top-0 h-full w-px bg-line" />
+            <span className="absolute left-5 top-0 h-px w-3 bg-line" />
+          </div>
+          <div className={`min-w-0 ${spacing}`}>
+            <PlateBody project={project} />
+          </div>
+        </div>
       </div>
     </article>
   );
