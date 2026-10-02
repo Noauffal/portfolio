@@ -5,10 +5,11 @@
 > describes it and is kept in sync with the code. Where this document and the code
 > disagree, **the code wins**.
 >
-> Status: Hero (Stages 2–6) is LOCKED and unchanged. Projects are now the approved
-> **Direction 03 / Physical Plates** system. The former BLACK → PAPER / Stage 7–8 paper
-> Projects experience is **superseded and retained for rollback only**. Projects still
-> use placeholder content.
+> Status: Hero (Stages 2–6) is LOCKED and unchanged. Projects are the approved
+> **Direction 03 / Physical Plates** system. A persistent **Instrument Navigation**
+> (Section 5) provides section jumps and whole-page progress. The former BLACK → PAPER /
+> Stage 7–8 paper Projects experience is **superseded and retained for rollback only**.
+> Projects still use placeholder content.
 
 ---
 
@@ -16,18 +17,20 @@
 
 Read this file first, then (in order):
 
-1. `src/app/page.tsx` — the single route composition.
-2. `src/app/globals.css` — tokens + Hero keyframes/scroll/reveal CSS + plate scopes.
+1. `src/app/page.tsx` — the single route composition (mounts `SiteNav` + `<main>`).
+2. `src/app/globals.css` — tokens + Hero keyframes/scroll/reveal CSS + plate + nav scopes.
 3. `src/components/hero.tsx` — Hero composition (LOCKED).
 4. `src/components/hero-latent-field.tsx` — Canvas 2D field (`FIELD_CONFIG`).
 5. `src/components/hero-scroll.tsx` — Stage 6 scroll progress.
-6. `src/components/projects/physical-plate.tsx` — the only Three.js engine.
-7. `src/components/projects/physical-projects.tsx` + `plate-01/02/03.tsx` + `plate-parts.tsx`
+6. `src/components/site-nav.tsx` — Instrument Navigation + whole-page progress.
+7. `src/components/projects/physical-plate.tsx` — the only Three.js engine.
+8. `src/components/projects/physical-projects.tsx` + `plate-01/02/03.tsx` + `plate-parts.tsx`
    — the Projects compositions.
-8. `src/data/projects.ts` — project content model.
+9. `src/data/projects.ts` — project content model.
 
-The Hero (Sections 3) and the Physical Projects system (Section 4) are the production
-architecture. Section 5 marks the superseded legacy system.
+The Hero (Section 3), the Physical Projects system (Section 4), and the Instrument
+Navigation (Section 5) are the production architecture. Section 6 marks the superseded
+legacy system.
 
 ---
 
@@ -170,10 +173,13 @@ one continuous near-black world (`#0b0b0d`) with the Hero, encountered while scr
 
 ### 4.2 `/` component tree
 ```
-<main>
-  <Hero />
-  <PhysicalProjects />
-</main>
+<>
+  <SiteNav />
+  <main>
+    <Hero />
+    <PhysicalProjects />
+  </main>
+</>
 ```
 `PhysicalProjects` renders the void + three Plate runways in order. The black latent world
 continues through Projects — there is **no paper transition**.
@@ -201,7 +207,7 @@ Shared engine constants (`physical-plate.tsx`):
   - Front/back (BoxGeometry groups `[4]=+z`, `[5]=-z`): `#ededeb`, `roughness 0.85`, `metalness 0`.
   - Sides (groups `[0]=+x`, `[1]=-x`, `[2]=+y`, `[3]=-y`): `#a8acad`, `roughness 0.8`, `metalness 0`.
 - **No** glass, transmission, attenuation, clearcoat, PMREM/environment, bevel, rounded
-  corners, or transparency. (Material polish deferred; see §8.)
+  corners, or transparency. (Material polish deferred; see §9.)
 - Lighting: `HemisphereLight(white, #666666, 0.85)` + key `DirectionalLight(white, 1)` at
   `(2,3,4)` + weak fill `DirectionalLight(white, 0.4)` at `(-3,-1,2)`.
 - Renderer: `antialias: !coarse`, `alpha: true`, `powerPreference: "high-performance"`,
@@ -288,7 +294,73 @@ follow-up** — desktop integration was the priority and mobile was not redesign
 
 ---
 
-## 5. SUPERSEDED / RETAINED LEGACY PROJECTS (Stage 7/8 + BLACK → PAPER)
+## 5. INSTRUMENT NAVIGATION (persistent)
+
+A single, restrained global instrument that appears once the Hero hands off and persists
+through the Projects. It is **not** a conventional navbar: no panel, blur, glass, pill,
+logo, shadow, glow, or decorative animation. It is invisible over the pristine Hero and is
+intended to almost disappear from conscious attention.
+
+### 5.1 Composition (V1)
+```
+N.A / 2026                              00   01   02   03
+────────────────────────────────────────────────────────────
+```
+- Left: `N.A / 2026` — mono meta, links to the top (`#hero`).
+- Right: `00 01 02 03` — `00` = Hero; `01/02/03` = the physical Plates (P01/P02/P03).
+- **No centre `PLATE XX` readout.** The simpler two-cluster layout is stronger: the active
+  number already carries position, and "Plate" is implied by the site vocabulary.
+- The bottom 1px hairline is simultaneously the nav rail (`--line`) and the whole-page
+  progress indicator (off-white `--foreground` line growing left → right).
+
+### 5.2 Behaviour
+- **Fixed and transparent:** `position: fixed`, `z-index: 40`, full-bleed rail; the strip is
+  `pointer-events: none` and only the anchors opt in (`pointer-events: auto`), so Plates and
+  their links are never blocked.
+- **Hero → nav handoff:** `IntersectionObserver` on `[data-hero]` (`threshold: 0`) with a
+  pixel-computed `rootMargin` calibrated to the real exit:
+  `topMargin = HERO_EXIT_RATIO * innerHeight − hero.offsetHeight`, `HERO_EXIT_RATIO = 0.45`.
+  The nav opens when the Hero leaves the shrunk root — at `scrollY ≈ 0.45·innerHeight`,
+  exactly where the Stage 6 exit completes (`--hero-p = 1`). Reverse scroll re-intersects and
+  restores the pristine Hero. `hero-scroll.tsx` and `--hero-p` are **only observed**; they are
+  never modified or written.
+- **Whole-page progress:** `--nav-progress = clamp(scrollY / (scrollHeight − innerHeight),
+  0, 1)` written on the nav with `style.setProperty`; the line uses
+  `transform: scaleX(var(--nav-progress))`, `transform-origin: left`.
+- **Active section:** cached document anchors (Hero centre; `[data-plate-scene]` centres) and
+  midpoint boundaries; the active index is the last boundary below
+  `scrollY + innerHeight * 0.5`. The DOM is touched only when the index changes
+  (`aria-current` moves to the active link). No per-frame React state.
+- **Navigation targets:** `00` → document top; `01/02/03` → the physical Plate scene centre
+  aligned with the viewport centre (`sceneCenterDocY − innerHeight/2`), **never** the runway
+  top. Native `window.scrollTo` (`behavior: "smooth"`; `"auto"` under reduced motion); the
+  native hash is preserved via `history.replaceState`.
+
+### 5.3 Responsive, accessibility, motion
+- Mobile keeps `00 01 02 03` directly accessible (no hamburger): same single strip, brand
+  left, numbers right; anchors keep ~37px tap targets while the strip stays visually thin.
+- `<nav aria-label="Sections">` + ordered list; per-link `aria-label` ("Hero", "Plate 01"…);
+  `aria-current="true"` on the active link; `:focus-visible` outline. While hidden the nav is
+  `visibility: hidden`, so its links leave the tab order and the accessibility tree.
+- Reduced motion: the entrance translation/transition and the link/underline transitions are
+  disabled in CSS; click scrolling is instant. Progress remains scroll-driven.
+- Performance: one passive `scroll` listener → a single rAF (writes `--nav-progress` and the
+  active index); cached geometry (viewport height, scroll span, anchors); re-measured on
+  `resize` and `document.fonts.ready`; no rAF work while hidden; full cleanup on unmount.
+
+### 5.4 Ownership
+- `src/components/site-nav.tsx` (client) — markup + the single controller.
+- Mounted from `src/app/page.tsx` (single-page scope), before `<main>`.
+- Semantic IDs (layout-neutral additions): `#hero`, `#plate-01`, `#plate-02`, `#plate-03`.
+- CSS scope `[data-site-nav]` in `globals.css`.
+- **Independent and unchanged:** the Hero entrance/exit system (`hero-scroll.tsx`,
+  `--hero-p`), the latent field, and the `PhysicalPlate`/Three.js engine (geometry, camera,
+  projection, materials, pointer tilt, P03 sizing/`shrink-0`) are untouched by the
+  navigation.
+
+---
+
+## 6. SUPERSEDED / RETAINED LEGACY PROJECTS (Stage 7/8 + BLACK → PAPER)
 
 The former paper-based Projects experience and Stage 8 reveal choreography are **no longer
 the production Projects experience**. They are superseded by the Physical Plates (§4) and
@@ -306,11 +378,11 @@ Superseded CSS still present but not rendered by `/`:
 - The `[data-paper]` datum `border-top`.
 
 **BLACK → PAPER is NOT the current production direction.** These items remain for easy
-rollback and are candidates for a separate cleanup pass (see §8).
+rollback and are candidates for a separate cleanup pass (see §9).
 
 ---
 
-## 6. Architecture map
+## 7. Architecture map
 
 Server-first App Router. Animation is CSS-driven for the Hero; Projects use one small
 Three.js client component per Plate.
@@ -318,12 +390,13 @@ Three.js client component per Plate.
 | File | Boundary | Responsibility |
 |---|---|---|
 | `src/app/layout.tsx` | server | Fonts, metadata, pre-paint gate scripts, `HeroGate`. |
-| `src/app/page.tsx` | server | `<main>` → `<Hero/>` + `<PhysicalProjects/>`. |
-| `src/app/globals.css` | — | Tokens; Hero Stage 3/6 CSS; plate scopes; legacy paper/Stage 8 CSS. |
+| `src/app/page.tsx` | server | `<SiteNav/>` + `<main>` → `<Hero/>` + `<PhysicalProjects/>`. |
+| `src/app/globals.css` | — | Tokens; Hero Stage 3/6 CSS; plate + nav scopes; legacy paper/Stage 8 CSS. |
 | `src/components/hero.tsx` | server | Hero composition (LOCKED). |
 | `src/components/hero-latent-field.tsx` | client | Canvas 2D field. |
 | `src/components/hero-scroll.tsx` | client | Stage 6 `--hero-p`. |
 | `src/components/hero-gate.tsx` | client | Re-applies Hero gates after Strict-Mode remount. |
+| `src/components/site-nav.tsx` | client | Instrument Navigation + whole-page progress. |
 | `src/components/inline-script.tsx` | client | Safe inline `<script>` helper. |
 | `src/components/projects/physical-plate.tsx` | **client** | Three.js engine (only). |
 | `src/components/projects/physical-projects.tsx` | server | Void + runways + plates. |
@@ -336,7 +409,7 @@ or UI libraries.
 
 ---
 
-## 7. Non-negotiable constraints
+## 8. Non-negotiable constraints
 
 **Aesthetic**
 - No generic portfolio cards, 3-column grids, thumbnails-in-rectangles, carousels.
@@ -361,11 +434,12 @@ or UI libraries.
 - Preserve progressive enhancement: no-JS and reduced-motion must show final, readable
   content; failed scripts must never leave content hidden.
 - Preserve the server/client boundaries; keep Three.js in the smallest client component.
-- No new sections/navigation/placeholder architecture without an explicit request.
+- No new sections/placeholder architecture without an explicit request; the Instrument
+  Navigation (§5) is the only global navigation and stays intentionally minimal.
 
 ---
 
-## 8. Current status / next steps
+## 9. Current status / next steps
 
 **LOCKED**
 - Hero (Stages 2–6): composition, typography, ruler, field, entrance, scroll exit.
@@ -373,6 +447,8 @@ or UI libraries.
 - Pointer orientation behavior (local normalization, ±12°/±8°).
 - P01/P02 formats; P03 16:10 monumental format.
 - Continuous black Projects world; DOM/WebGL front-face alignment; `shrink-0` invariant.
+- Instrument Navigation (§5): composition, Hero handoff, whole-page progress, active index,
+  and Plate-centre targets.
 
 **OPEN / NEXT**
 - Final scroll rhythm calibration (§4.7 values are a starting point).
@@ -385,10 +461,10 @@ or UI libraries.
 
 ---
 
-## 9. Future-session instructions
+## 10. Future-session instructions
 
-- **Read first:** this document, then `page.tsx`, `globals.css`, the Hero components, and
-  `src/components/projects/physical-plate.tsx`.
+- **Read first:** this document, then `page.tsx`, `globals.css`, the Hero components,
+  `src/components/site-nav.tsx`, and `src/components/projects/physical-plate.tsx`.
 - **Hero is LOCKED.** Do not modify Stages 2–6.
 - **Physical engine invariants are LOCKED** (§4.4–4.5). Tune parameters (plate formats,
   `surfaceWidth`, scroll rhythm) rather than restructuring.
@@ -411,6 +487,9 @@ or UI libraries.
   lerp `0.08`. DPR cap `2` / `1.5` coarse.
 - Plates: P01 `1×1.4` right · P02 `1×1.5` left · P03 `1×0.625` (16:10) centered.
 - Scroll rhythm: void `45–60svh`; runways `150/150/140svh`; gaps `28svh` (current).
+- Instrument nav: hidden over the Hero; opens at `HERO_EXIT_RATIO 0.45 · innerHeight`;
+  `--nav-progress = scrollY / (scrollHeight − innerHeight)`; active = last anchor midpoint
+  below `scrollY + 0.5·innerHeight`; click centres the Plate scene centre − `0.5·innerHeight`.
 
 ## Appendix B — Historical notes (superseded)
 

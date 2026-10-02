@@ -17,6 +17,7 @@ export function Hero() {
 
   return (
     <section
+      id="hero"
       data-hero
       className="relative mx-auto grid min-h-svh w-full max-w-[1600px] grid-rows-[auto_1fr_auto] px-6 py-6 sm:px-10 sm:py-8"
     >
