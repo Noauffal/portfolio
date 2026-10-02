@@ -268,12 +268,12 @@ likely visual calibration area.
 
 | Segment | Value |
 |---|---|
-| initial void (Hero → P01) | `min-h-[45svh] sm:min-h-[60svh]` |
-| P01 runway | `min-h-[150svh]`, right axis |
-| gap | `min-h-[28svh]` |
-| P02 runway | `min-h-[150svh]`, left axis |
-| gap | `min-h-[28svh]` |
-| P03 runway | `min-h-[140svh]`, centered, `overflow-x-clip` |
+| initial void (Hero → P01) | `min-h-[25svh] sm:min-h-[30svh]` |
+| P01 runway | `min-h-[120svh]`, right axis |
+| gap | `min-h-[16svh]` |
+| P02 runway | `min-h-[120svh]`, left axis |
+| gap | `min-h-[16svh]` |
+| P03 runway | `min-h-[124svh]`, centered, `overflow-x-clip` |
 
 ### 4.8 Performance / lifecycle
 - **One WebGL renderer/context per Plate — three contexts currently.** A future single
@@ -479,7 +479,7 @@ or UI libraries.
   `rotateY ±12°`, `rotateX ±8°`, `H_RADIUS 0.65`, `V_RADIUS 0.55`, dead zone `0.04`,
   lerp `0.08`. DPR cap `2` / `1.5` coarse.
 - Plates: P01 `1×1.4` right · P02 `1×1.5` left · P03 `1×0.625` (16:10) centered.
-- Scroll rhythm: void `45–60svh`; runways `150/150/140svh`; gaps `28svh` (current).
+- Scroll rhythm: void `25–30svh`; runways `120/120/124svh`; gaps `16svh` (current).
 - Instrument nav: hidden over the Hero; opens at `HERO_EXIT_RATIO 0.45 · innerHeight`;
   `--nav-progress = scrollY / (scrollHeight − innerHeight)`; active = last anchor midpoint
   below `scrollY + 0.5·innerHeight`; click centres the Plate scene centre − `0.5·innerHeight`.

@@ -9,12 +9,12 @@ export function PhysicalProjects() {
   return (
     <>
       {/* Enter the latent space */}
-      <section aria-hidden="true" className="min-h-[45svh] sm:min-h-[60svh]" />
+      <section aria-hidden="true" className="min-h-[25svh] sm:min-h-[30svh]" />
 
       {/* Plate 01 — portrait / right */}
       <section
         id="plate-01"
-        className="mx-auto flex min-h-[150svh] w-full max-w-[1600px] items-center px-6 sm:px-10"
+        className="mx-auto flex min-h-[120svh] w-full max-w-[1600px] items-center px-6 sm:px-10"
       >
         <div className="grid w-full grid-cols-1 items-center md:grid-cols-12">
           <div aria-hidden="true" className="hidden md:col-span-5 md:block" />
@@ -24,12 +24,12 @@ export function PhysicalProjects() {
         </div>
       </section>
 
-      <section aria-hidden="true" className="min-h-[28svh]" />
+      <section aria-hidden="true" className="min-h-[16svh]" />
 
       {/* Plate 02 — taller portrait / left */}
       <section
         id="plate-02"
-        className="mx-auto flex min-h-[150svh] w-full max-w-[1600px] items-center px-6 sm:px-10"
+        className="mx-auto flex min-h-[120svh] w-full max-w-[1600px] items-center px-6 sm:px-10"
       >
         <div className="grid w-full grid-cols-1 items-center md:grid-cols-12">
           <div className="flex justify-center md:col-span-7 md:justify-start">
@@ -39,12 +39,12 @@ export function PhysicalProjects() {
         </div>
       </section>
 
-      <section aria-hidden="true" className="min-h-[28svh]" />
+      <section aria-hidden="true" className="min-h-[16svh]" />
 
       {/* Plate 03 — very large 16:10 landscape / centre */}
       <section
         id="plate-03"
-        className="mx-auto flex min-h-[140svh] w-full max-w-[1600px] items-center overflow-x-clip px-6 sm:px-10"
+        className="mx-auto flex min-h-[124svh] w-full max-w-[1600px] items-center overflow-x-clip px-6 sm:px-10"
       >
         <div className="flex w-full justify-center">
           <Plate03 />
