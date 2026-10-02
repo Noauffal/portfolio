@@ -6,7 +6,9 @@
   --muted: #8f8f94;
   --line: rgba(255, 255, 255, 0.1);
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
-  /* BLACK → PAPER — Projects material (reversible experiment). Hero tokens unchanged. */
+  /* Physical Plate palette. The DOM overlay under the WebGL slab is dark ink on the
+     pale plate face: `[data-plate-scene]` maps these onto `--foreground/--muted/--line`,
+     and the pre-WebGL placeholder uses `--paper`. */
   --paper: #e9e6df;
   --paper-ink: #171513;
   --paper-muted: #6b675f;
@@ -14,7 +16,6 @@
 }
 
 @theme inline {
-  --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
   --color-line: var(--line);
@@ -32,20 +33,7 @@ body {
   font-family: var(--font-instrument), system-ui, sans-serif;
 }
 
-/* BLACK → PAPER — Projects material scope. One full-bleed paper surface with
-   the LATENT PLATE roles inverted, applied by overriding the semantic tokens.
-   The Hero (outside this scope) keeps its dark tokens untouched. */
-[data-paper] {
-  --foreground: var(--paper-ink);
-  --muted: var(--paper-muted);
-  --line: var(--paper-line);
-  background-color: var(--paper);
-  color: var(--foreground);
-  /* The Datum: the paper's real leading edge, static in normal document flow. */
-  border-top: 1px solid var(--paper-line);
-}
-
-/* DIRECTION 03 — floating specimen plate (prototype scope, WebGL V1).
+/* DIRECTION 03 — physical specimen plate (production engine).
    WebGL renders the physical slab; the editorial content stays real DOM on a
    transparent overlay that shares the mesh rotation and camera-matched
    perspective. Scroll owns position; pointer owns orientation; material is WebGL. */
@@ -252,107 +240,6 @@ body {
   }
 }
 
-/* Stage 8 — one-shot project reveal (scroll-activated, progressive enhancement) */
-@media (prefers-reduced-motion: no-preference) {
-  .reveal-armed [data-reveal] {
-    opacity: 0;
-    transition-property: opacity, transform;
-    transition-duration: var(--rd, 0.6s);
-    transition-timing-function: var(--ease);
-    transition-delay: var(--rdelay, 0s);
-  }
-
-  .reveal-armed [data-reveal="rule"] {
-    opacity: 1;
-    transform: scaleX(0);
-    transform-origin: left;
-  }
-
-  .reveal-armed [data-reveal="title"] {
-    opacity: 1;
-    transform: translateY(105%);
-  }
-
-  .reveal-armed [data-reveal="register"],
-  .reveal-armed [data-reveal="text"],
-  .reveal-armed [data-reveal="meta"],
-  .reveal-armed [data-reveal="links"],
-  .reveal-armed [data-reveal="caption"] {
-    transform: translateY(8px);
-  }
-
-  .reveal-armed [data-reveal="figure"],
-  .reveal-armed [data-reveal="figure-secondary"] {
-    transform: translateY(16px);
-  }
-
-  .reveal-armed [data-reveal-root].is-revealed [data-reveal] {
-    opacity: 1;
-    transform: none;
-  }
-
-  [data-reveal="rule"] {
-    --rdelay-base: 0s;
-    --rd: 0.5s;
-  }
-  [data-reveal="register"] {
-    --rdelay-base: 0.05s;
-    --rd: 0.5s;
-  }
-  [data-reveal="title"] {
-    --rdelay-base: 0.12s;
-    --rd: 0.7s;
-  }
-  [data-reveal="text"] {
-    --rdelay-base: 0.24s;
-    --rd: 0.6s;
-  }
-  [data-reveal="meta"] {
-    --rdelay-base: 0.34s;
-    --rd: 0.6s;
-  }
-  [data-reveal="links"] {
-    --rdelay-base: 0.44s;
-    --rd: 0.6s;
-  }
-  [data-reveal="figure"] {
-    --rdelay-base: 0.4s;
-    --rd: 0.7s;
-  }
-  [data-reveal="figure-secondary"] {
-    --rdelay-base: 0.5s;
-    --rd: 0.7s;
-  }
-  [data-reveal="apparatus"] {
-    --rdelay-base: 0.72s;
-    --rd: 0.6s;
-  }
-  [data-reveal="caption"] {
-    --rdelay-base: 0.62s;
-    --rd: 0.6s;
-  }
-
-  .reveal-armed [data-reveal] {
-    --rdelay: var(--rdelay-base, 0s);
-  }
-
-  .reveal-armed [data-reveal-root][data-plate="compact"] [data-reveal] {
-    --rdelay: calc(var(--rdelay-base, 0s) * 0.55);
-  }
-
-  .reveal-armed [data-reveal-root][data-plate="split"] [data-reveal="figure"] {
-    --rdelay: 0.06s;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  [data-reveal] {
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
-  }
-}
-
 /* Persistent section navigation + whole-page scroll progress.
    LATENT PLATE instrumentation: a hairline rail, restrained mono marks.
    Hidden over the pristine Hero; revealed on handoff by site-nav.tsx. */
@@ -376,10 +263,7 @@ body {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
-  transition:
-    opacity 0.28s var(--ease),
-    transform 0.28s var(--ease),
-    visibility 0s;
+  transition-delay: 0s;
 }
 
 /* full-bleed muted hairline rail */

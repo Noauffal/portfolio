@@ -7,10 +7,6 @@ export function PlateMeta({ project }: { project: Project }) {
     ["Stack", project.stack.join(" · ")],
   ];
 
-  if (project.context) {
-    rows.push(["Context", project.context]);
-  }
-
   return (
     <dl className="grid grid-cols-[4.5rem_1fr] gap-x-4 gap-y-1.5 font-mono text-[10px] uppercase tracking-[0.18em]">
       {rows.map(([label, value]) => (

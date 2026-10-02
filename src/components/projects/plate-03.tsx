@@ -25,9 +25,9 @@ export function Plate03() {
         {/* MAIN — flexible two-column area */}
         <div className="mt-7 grid min-h-0 flex-1 grid-cols-[42fr_58fr] gap-[8%]">
           <div className="flex flex-col">
-            <h3 className="shrink-0 font-display text-[clamp(1.3rem,2.6vw,2.8rem)] uppercase leading-[0.95] tracking-[-0.02em]">
+            <h2 className="shrink-0 font-display text-[clamp(1.3rem,2.6vw,2.8rem)] uppercase leading-[0.95] tracking-[-0.02em]">
               {project.title}
-            </h3>
+            </h2>
             <p className="mt-5 max-w-[46ch] shrink-0 text-[0.95rem] leading-[1.55] text-foreground/70">
               {project.description}
             </p>

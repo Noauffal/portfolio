@@ -283,7 +283,6 @@ export function PhysicalPlate({
   const style = {
     width: `calc(${surfaceWidth} * ${room.toFixed(5)})`,
     aspectRatio: `${width} / ${height}`,
-    "--plate-scene-h": sceneHeight,
     "--plate-perspective": `calc(${sceneHeight} * ${(1 / (2 * TAN_HALF_FOV)).toFixed(5)})`,
     "--plate-front-z": `calc(${sceneHeight} * ${(
       (contentFraction * FRONT_Z) /

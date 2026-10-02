@@ -2,9 +2,10 @@
 
 import { useEffect, useRef } from "react";
 
-/* Matches SCROLL_DISTANCE in hero-scroll.tsx: the Hero exit choreography is
-   complete at scrollY = 0.45 * innerHeight. Kept as a local constant so the
-   Hero animation is only observed, never owned. */
+/* Deliberately kept local to the nav, but it must stay in sync with
+   SCROLL_DISTANCE (0.45) in hero-scroll.tsx: the Hero exit choreography is
+   complete at scrollY = 0.45 * innerHeight. The nav only observes that
+   boundary — it never writes --hero-p or owns the Hero animation. */
 const HERO_EXIT_RATIO = 0.45;
 const ACTIVE_REFERENCE_K = 0.5;
 const CLICK_CENTER_K = 0.5;
@@ -37,6 +38,7 @@ export function SiteNav() {
     let boundaries: number[] = [];
     let activeIndex = -1;
     let frame = 0;
+    let resizeFrame = 0;
     let open = false;
     let disposed = false;
 
@@ -148,8 +150,13 @@ export function SiteNav() {
     };
 
     const onResize = () => {
-      armObserver();
-      schedule();
+      if (resizeFrame) cancelAnimationFrame(resizeFrame);
+      resizeFrame = requestAnimationFrame(() => {
+        resizeFrame = 0;
+        if (disposed) return;
+        armObserver();
+        schedule();
+      });
     };
 
     nav.addEventListener("click", onClick);
@@ -169,6 +176,7 @@ export function SiteNav() {
     return () => {
       disposed = true;
       if (frame) cancelAnimationFrame(frame);
+      if (resizeFrame) cancelAnimationFrame(resizeFrame);
       observer?.disconnect();
       nav.removeEventListener("click", onClick);
       window.removeEventListener("scroll", onScroll);

@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 
+/* Hero exit distance. site-nav.tsx mirrors this as HERO_EXIT_RATIO; keep the two in sync. */
 const SCROLL_DISTANCE = 0.45;
 
 export function HeroScroll() {

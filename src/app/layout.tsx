@@ -23,8 +23,6 @@ export const metadata: Metadata = {
 
 const heroScript = `(function(){try{var r=document.documentElement;if(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches){window.__heroAnim="done";return}r.classList.add("hero-anim");window.__heroAnim="armed";var fired=false;var fire=function(){if(fired)return;fired=true;window.__heroAnim="ready";r.classList.add("hero-ready");window.setTimeout(function(){window.__heroAnim="done";r.classList.remove("hero-anim","hero-ready")},2400)};if(document.fonts&&document.fonts.ready&&document.fonts.ready.then){document.fonts.ready.then(function(){window.requestAnimationFrame(fire)})}window.setTimeout(fire,900)}catch(e){try{window.__heroAnim="done";document.documentElement.classList.remove("hero-anim")}catch(_){}}})()`;
 
-const revealScript = `(function(){try{var r=document.documentElement;if(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;r.classList.add("reveal-armed");window.__revealFallback=window.setTimeout(function(){r.classList.remove("reveal-armed")},5000)}catch(e){try{document.documentElement.classList.remove("reveal-armed")}catch(_){}}})()`;
-
 export default function RootLayout({
   children,
 }: {
@@ -38,7 +36,6 @@ export default function RootLayout({
     >
       <body>
         <InlineScript html={heroScript} />
-        <InlineScript html={revealScript} />
         {children}
         <HeroGate />
       </body>

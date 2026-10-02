@@ -21,9 +21,9 @@ export function Plate01() {
           <span>Specimen</span>
         </div>
 
-        <h3 className="mt-6 shrink-0 font-display text-[clamp(1.35rem,2.3vw,2.4rem)] uppercase leading-[0.95] tracking-[-0.02em]">
+        <h2 className="mt-6 shrink-0 font-display text-[clamp(1.35rem,2.3vw,2.4rem)] uppercase leading-[0.95] tracking-[-0.02em]">
           {project.title}
-        </h3>
+        </h2>
 
         <p className="mt-4 max-w-[40ch] shrink-0 text-[0.95rem] leading-[1.5] text-foreground/70">
           {project.description}

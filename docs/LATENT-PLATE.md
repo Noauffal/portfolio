@@ -8,8 +8,8 @@
 > Status: Hero (Stages 2–6) is LOCKED and unchanged. Projects are the approved
 > **Direction 03 / Physical Plates** system. A persistent **Instrument Navigation**
 > (Section 5) provides section jumps and whole-page progress. The former BLACK → PAPER /
-> Stage 7–8 paper Projects experience is **superseded and retained for rollback only**.
-> Projects still use placeholder content.
+> Stage 7–8 paper Projects experience has been **removed** (see §6). Projects still use
+> placeholder content.
 
 ---
 
@@ -18,7 +18,7 @@
 Read this file first, then (in order):
 
 1. `src/app/page.tsx` — the single route composition (mounts `SiteNav` + `<main>`).
-2. `src/app/globals.css` — tokens + Hero keyframes/scroll/reveal CSS + plate + nav scopes.
+2. `src/app/globals.css` — tokens; Hero keyframes/scroll CSS; plate + nav scopes.
 3. `src/components/hero.tsx` — Hero composition (LOCKED).
 4. `src/components/hero-latent-field.tsx` — Canvas 2D field (`FIELD_CONFIG`).
 5. `src/components/hero-scroll.tsx` — Stage 6 scroll progress.
@@ -72,9 +72,10 @@ parallax-demo feel. Projects must not read as "website cards".
 | `--line` | `rgba(255,255,255,0.1)` | hairlines / ticks / frames |
 | `--ease` | `cubic-bezier(0.16, 1, 0.3, 1)` | expo-out easing |
 
-Retained but **not rendered by `/`** (legacy BLACK → PAPER): `--paper #e9e6df`,
-`--paper-ink #171513`, `--paper-muted #6b675f`, `--paper-line rgba(23,21,15,0.15)`.
-The Hero latent field color is `#ededed`.
+Physical Plate palette (consumed on `/`): the DOM overlay under each WebGL slab is dark ink
+on the pale plate face. `[data-plate-scene]` maps `--paper-ink #171513` → `--foreground`,
+`--paper-muted #6b675f` → `--muted`, `--paper-line rgba(23,21,15,0.15)` → `--line`, and the
+pre-WebGL placeholder uses `--paper #e9e6df`. The Hero latent field color is `#ededed`.
 
 ### 2.2 Fonts
 - Display: **Instrument Sans** (`next/font/google`, `--font-instrument` → `font-display`).
@@ -87,8 +88,8 @@ The Hero latent field color is `#ededed`.
 - Desktop apparatus gutter: **`4rem`** (`md:pl-16`).
 - Hero: `min-h-svh`, `grid-rows-[auto_1fr_auto]`.
 - Projects runways use the same `max-w-[1600px]` container and a 12-col grid for axis
-  placement (Section 4.6). A dedicated 4rem gutter is used by the Hero and by the legacy
-  paper plates, not by the physical Plates (which are objects, not grid columns).
+  placement (Section 4.6); the physical Plates are objects placed within that grid, not grid
+  columns. The dedicated 4rem apparatus gutter is Hero-only.
 
 ### 2.4 Ruler / hairline apparatus (Hero — LOCKED)
 Vertical hairline at `left-5` inside the `4rem` gutter; ticks at `0/25/50/75/100%`;
@@ -360,25 +361,18 @@ N.A / 2026                              00   01   02   03
 
 ---
 
-## 6. SUPERSEDED / RETAINED LEGACY PROJECTS (Stage 7/8 + BLACK → PAPER)
+## 6. HISTORICAL — SUPERSEDED BLACK → PAPER / STAGE 7–8 (removed)
 
-The former paper-based Projects experience and Stage 8 reveal choreography are **no longer
-the production Projects experience**. They are superseded by the Physical Plates (§4) and
-retained only for rollback.
+The former paper-based Projects experience and its Stage 8 reveal choreography were
+superseded by the Physical Plates (§4) and have been **removed** from the codebase (cleanup
+pass 01): the `projects-section` / `project-plate` / `specimen-figure` / `projects-reveal`
+components, their `[data-paper]` and `.reveal-armed [data-reveal]` CSS, and the reveal
+bootstrap script in `layout.tsx` no longer exist.
 
-Superseded files (not imported by `/`):
-- `src/components/projects/projects-section.tsx`
-- `src/components/projects/project-plate.tsx`
-- `src/components/projects/specimen-figure.tsx`
-- `src/components/projects/projects-reveal.tsx`
+The `--paper*` tokens remain only because the Physical Plates **reuse** them as the plate
+palette (§2.1); that is current production behavior, not legacy.
 
-Superseded CSS still present but not rendered by `/`:
-- `[data-paper]` scope and `--paper*` tokens (`globals.css`).
-- Stage 8 `.reveal-armed [data-reveal]` rules and the reduced-motion reveal block.
-- The `[data-paper]` datum `border-top`.
-
-**BLACK → PAPER is NOT the current production direction.** These items remain for easy
-rollback and are candidates for a separate cleanup pass (see §9).
+**BLACK → PAPER is not the current production direction.**
 
 ---
 
@@ -391,7 +385,7 @@ Three.js client component per Plate.
 |---|---|---|
 | `src/app/layout.tsx` | server | Fonts, metadata, pre-paint gate scripts, `HeroGate`. |
 | `src/app/page.tsx` | server | `<SiteNav/>` + `<main>` → `<Hero/>` + `<PhysicalProjects/>`. |
-| `src/app/globals.css` | — | Tokens; Hero Stage 3/6 CSS; plate + nav scopes; legacy paper/Stage 8 CSS. |
+| `src/app/globals.css` | — | Tokens; Hero Stage 3/6 CSS; plate + nav scopes. |
 | `src/components/hero.tsx` | server | Hero composition (LOCKED). |
 | `src/components/hero-latent-field.tsx` | client | Canvas 2D field. |
 | `src/components/hero-scroll.tsx` | client | Stage 6 `--hero-p`. |
@@ -457,7 +451,6 @@ or UI libraries.
 - Possible material refinement later — **explicitly deferred**; do not reintroduce glass
   unless deliberately revisited.
 - Possible single-renderer optimization later (not required).
-- Cleanup/removal of superseded Stage 7/8 components + paper CSS after the rollback window.
 
 ---
 
@@ -472,7 +465,7 @@ or UI libraries.
   runway heights in `physical-projects.tsx`, and project content in `src/data/projects.ts`.
 - **Keep it dependency-light, progressive, and performant:** passive listeners, rAF
   throttling, IntersectionObserver offscreen pause, visibility pause, DPR cap, disposal.
-- **Verify before finishing:** `npm run lint`, `npx tsc --noEmit`, `npm run build`.
+- **Verify before finishing:** `npm run lint`, `npm run typecheck`, `npm run build`.
 
 ---
 
@@ -493,9 +486,10 @@ or UI libraries.
 
 ## Appendix B — Historical notes (superseded)
 
-The original plan (`.kilo/plans/…`) and the BLACK → PAPER / Stage 7–8 paper Projects
-experience are historical. The current implementation is authoritative. Earlier decorative
-Hero field tuning (size/opacity/parallax) and the Hero display scale
-(`clamp(1.75rem,8.8vw,8.6rem)`, `leading 0.88`) are as implemented. The prototype route
-`/direction-03` and `src/components/direction-03/` no longer exist — Direction 03 graduated
-into the production Projects architecture under `src/components/projects/`.
+The original plans (`.kilo/plans/…`), the BLACK → PAPER / Stage 7–8 paper Projects
+experience, the prototype route `/direction-03`, and `src/components/direction-03/` are
+historical and no longer exist — Direction 03 graduated into the production Projects
+architecture under `src/components/projects/`, and the paper/Stage 7–8 code was removed in
+cleanup pass 01. The current implementation is authoritative. Earlier decorative Hero field
+tuning (size/opacity/parallax) and the Hero display scale
+(`clamp(1.75rem,8.8vw,8.6rem)`, `leading 0.88`) are as implemented.

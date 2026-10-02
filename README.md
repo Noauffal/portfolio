@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LATENT PLATE — Portfolio
 
-## Getting Started
+Personal portfolio for Noauffal Abdullatief (Data Scientist & AI Engineer).
 
-First, run the development server:
+The page is a single scrolling experience: a cinematic **Hero** over an animated latent
+field, followed by a continuous near-black **latent world** in which three physical
+specimen **Plates** (WebGL slabs with real DOM editorial content) are encountered while
+scrolling. A restrained **Instrument Navigation** provides section jumps and whole-page
+progress once the Hero hands off.
+
+The authoritative creative/technical reference is [`docs/LATENT-PLATE.md`](docs/LATENT-PLATE.md).
+Where that document and the code disagree, the code wins.
+
+## Stack
+
+- Next.js 16 (App Router) + React 19 + TypeScript
+- Tailwind CSS v4 (CSS-first `@theme` configuration in `src/app/globals.css`)
+- `three` — used directly, only by `src/components/projects/physical-plate.tsx`
+- No animation/UI libraries
+
+## Development
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev        # start the dev server at http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Checks
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run lint       # ESLint
+npm run typecheck  # tsc --noEmit
+npm run build      # production build (also runs the TypeScript check)
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Structure
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `src/app/page.tsx` — route composition (`SiteNav` + `Hero` + `PhysicalProjects`)
+- `src/app/globals.css` — design tokens, Hero animation CSS, plate + nav scopes
+- `src/components/hero*.tsx` — Hero, latent field, scroll exit, entrance gate
+- `src/components/site-nav.tsx` — Instrument Navigation + scroll progress
+- `src/components/projects/` — the physical Plates and their editorial content
+- `src/data/projects.ts` — project content model (placeholder content for now)
